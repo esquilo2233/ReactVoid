@@ -14,7 +14,6 @@ export default function Home() {
             <h1 className="text-3xl font-bold text-center">Spiritual Apotheosis</h1>
           </div>
         </header>
-
         <main className="container mx-auto mt-8">
           <section className="mt-8 md:mt-0 md:ml-8">
             <div className="mb-8 flex justify-center">
