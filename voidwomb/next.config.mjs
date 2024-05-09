@@ -1,8 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    // Adicione a seguinte configuração para especificar o diretório das páginas
-    pagesDir: 'src/pages',
+    async redirects() {
+      return [
+        {
+          source: '/',
+          destination: '/homepage',
+          permanent: false,
+        },
+      ];
+    },
   };
   
   export default nextConfig;
-  

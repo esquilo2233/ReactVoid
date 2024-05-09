@@ -31,3 +31,15 @@ body {
     text-wrap: balance;
   }
 }
+.background-blur {
+  position: fixed; /* Mantido para cobrir toda a janela de visualização */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  filter: blur(8px);
+  background-image: url('/img/Voidwomb-foto.jpg');
+  background-size: cover;
+  background-position: center;
+}
