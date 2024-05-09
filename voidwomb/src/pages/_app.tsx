@@ -1,5 +1,4 @@
 import React from 'react';
-import '../styles/globals.css';  // Ajuste o caminho conforme a estrutura do seu diretório
 import RootLayout from '../components/RootLayout'; 
 import type { AppProps } from 'next/app';
 import { createClient } from '@supabase/supabase-js';

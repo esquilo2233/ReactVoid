@@ -8,16 +8,39 @@ class MyDocument extends Document {
 
     render() {
         return (
-            <Html lang="en">
+            <Html lang="pt-pt">
                 <Head>
-                    
+                    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+                    <style>
+                    {`
+                            .background-blur {
+                                position: relative;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                z-index: -1;
+                                background-image: url('{% static "src/img/Voidwomb-foto.jpg" %}');
+                                background-size: cover;
+                                background-position: center;
+                                background-repeat: no-repeat;
+                                filter: blur(8px);
+                            }
+                            .content-container {
+                                position: relative;
+                                z-index: 1;
+                            }
+                        `}
+                    </style>
                 </Head>
-                <body>
+                <body className="flex flex-col min-h-screen">
+                    
+                    <div className="flex-1">
+                    <div className="background-blur"></div>
                     <Main />
-                    <div className="mb-8 flex justify-center background-blur content-container">
-                        <Image src="/img/Voidwomb-foto.jpg" alt="" width={500} height={500} />
-                    </div>
                     <NextScript />
+                    </div>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
                 </body>
             </Html>
         );

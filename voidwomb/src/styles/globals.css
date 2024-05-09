@@ -32,7 +32,7 @@ body {
   }
 }
 .background-blur {
-  position: fixed; /* Mantido para cobrir toda a janela de visualização */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -40,6 +40,7 @@ body {
   z-index: -1;
   filter: blur(8px);
   background-image: url('/img/Voidwomb-foto.jpg');
-  background-size: cover;
-  background-position: center;
+  background-size: auto;
+  background-position: auto;
 }
+
