@@ -1,34 +1,16 @@
-import React from 'react';
-// import { useRouter } from 'next/router';
-// import { supabase } from '../../_app';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { supabase } from '../../../utils/SupabaseService';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function AdmHome() {
-    // const router = useRouter();
-    return <div>Esta é a página do carrinho.</div>;
-    // // Verifica se o usuário não está autenticado e redireciona para a página de login
-    // if (!user) {
-    //   router.push('/Adm');
-    //   return null;
-    // }
-  
-    // return (
-    //   <div>
-    //     <h1>Minha Página</h1>
-    //     <p>Bem-vindo, {user.email}!</p>
-    //   </div>
-    // );
-  }
-  
-//   export async function getServerSideProps(context) {
-//     // Obtém o cookie de autenticação do request
-//     const { user } = await supabase.auth.api.getUserByCookie(context.req);
-  
-//     return {
-//       props: {
-//         user: user || null, // Passa o usuário para a página ou null se não estiver autenticado
-//       },
-//     };
-//   }
-
+  return (
+    <div>
+      <div>Esta é a página do carrinho.</div>
+      <div>Bem-vindo!</div>
+    </div>
+  );
+}
 
 export default AdmHome;
