@@ -1,9 +1,10 @@
 // components/Navbar.tsx
 import Link from 'next/link';
 import Image from 'next/image';
+import { useSession, signOut } from 'next-auth/react';
 
 const Navbar: React.FC = () => {
-
+  const { data: session, status } = useSession();
   return (
     <nav className="bg-black border-gray-200 dark:bg-gray-900 z-50 relative" style={{ backgroundColor: "black" }}>
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -29,6 +30,19 @@ const Navbar: React.FC = () => {
             <li>
               <Link href="/contact" className="block py-2 px-3 text-white rounded md:bg-transparent md:text-white md:p-0 dark:text-white">Contact</Link>
             </li>
+            {session?.user && session.user.is_staff && (
+              <li>
+                <Link href="/admin" className="block py-2 px-3 text-white rounded md:bg-transparent md:text-white md:p-0 dark:text-white">Admin</Link>
+              </li>
+            )}
+            {session?.user && (
+              <li>
+                <button onClick={() => signOut()} className="block py-2 px-3 text-white rounded md:bg-transparent md:text-white md:p-0 dark:text-white">Logout</button>
+              </li>
+            )
+              
+            }
+                
             <li>
               <Link href="/cart" className="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-white md:p-0 dark:text-white md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
                 <div className="flex items-center">
@@ -37,13 +51,7 @@ const Navbar: React.FC = () => {
                 </div>
               </Link>
             </li>
-            {/* <li>
-            {user ? (
-        <button onClick={handleLogout}>Logout</button>
-          ) : (
-              <p>Usuário não está autenticado.</p>
-          )}
-            </li> */}
+            
           </ul>
         </div>
       </div>

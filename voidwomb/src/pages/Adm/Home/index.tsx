@@ -1,14 +1,13 @@
-// src/pages/Adm/Home/index.tsx
-import React from 'react';
-import withAdminAuth from '../../../components/withAdminAuth';
+// pages/admin/index.tsx
+import withAuth from '../../../components/withAuth';
 
-const AdminHome = () => {
+const AdminPage: React.FC = () => {
   return (
     <div>
-      <h1>Admin Home</h1>
-      <p>Welcome, Admin!</p>
+      <h1>Admin Page</h1>
+      <p>Welcome to the admin page. Only accessible if you are logged in.</p>
     </div>
   );
 };
 
-export default withAdminAuth(AdminHome);
+export default withAuth(AdminPage);
