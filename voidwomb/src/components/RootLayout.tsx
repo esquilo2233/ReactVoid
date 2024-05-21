@@ -26,6 +26,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
                         <div className="hidden w-full md:block md:w-auto" id="navbar-default">
                             <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-black md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-black dark:bg-black md:dark:bg-black dark:border-gray-700">
                                 <li>
+                                    <Link href="/home" className="block py-2 px-3 text-white rounded md:bg-transparent md:text-white md:p-0 dark:text-white">Home</Link>
+                                </li>
+                                <li>
                                     <Link href="/store" className="block py-2 px-3 text-white rounded md:bg-transparent md:text-white md:p-0 dark:text-white">Store</Link>
                                 </li>
                                 <li>
@@ -34,6 +37,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
                                 <li>
                                     <Link href="/contact"  className="block py-2 px-3 text-white rounded md:bg-transparent md:text-white md:p-0 dark:text-white" >Contact</Link>
                                 </li>
+                            
+                                
                                 <li>
                                   <Link href="/cart" className="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-white md:p-0 dark:text-white md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
                                     <div className="flex items-center">
