@@ -1,34 +1,13 @@
-import React from 'react';
-// import { useRouter } from 'next/router';
-// import { supabase } from '../../_app';
+// pages/admin/index.tsx
+import withAuth from '../../../components/withAuth';
 
-function AdmHome() {
-    // const router = useRouter();
-    return <div>Esta é a página do carrinho.</div>;
-    // // Verifica se o usuário não está autenticado e redireciona para a página de login
-    // if (!user) {
-    //   router.push('/Adm');
-    //   return null;
-    // }
-  
-    // return (
-    //   <div>
-    //     <h1>Minha Página</h1>
-    //     <p>Bem-vindo, {user.email}!</p>
-    //   </div>
-    // );
-  }
-  
-//   export async function getServerSideProps(context) {
-//     // Obtém o cookie de autenticação do request
-//     const { user } = await supabase.auth.api.getUserByCookie(context.req);
-  
-//     return {
-//       props: {
-//         user: user || null, // Passa o usuário para a página ou null se não estiver autenticado
-//       },
-//     };
-//   }
+const AdminPage: React.FC = () => {
+  return (
+    <div>
+      <h1>Admin Page</h1>
+      <p>Welcome to the admin page. Only accessible if you are logged in.</p>
+    </div>
+  );
+};
 
-
-export default AdmHome;
+export default withAuth(AdminPage);
