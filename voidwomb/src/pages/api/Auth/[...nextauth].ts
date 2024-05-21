@@ -79,9 +79,9 @@ export default NextAuth({
     },
   },
   pages: {
-    signIn: '/adm',
-    signOut: 'api/auth/signout',
-    error: 'api/auth/error',
+    signIn: '/auth/signin',
+    signOut: '/auth/signout',
+    error: '/auth/error',
     verifyRequest: '/auth/verify-request',
     newUser: '/auth/new-user',
   },
