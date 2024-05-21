@@ -3,7 +3,7 @@ import { useSession, signIn } from 'next-auth/react';
 import { useEffect } from 'react';
 
 const withAuth = (WrappedComponent: any) => {
-  return (props: any) => {
+  const ComponentWithAuth = (props: any) => {
     const { data: session, status } = useSession();
 
     useEffect(() => {
@@ -24,6 +24,10 @@ const withAuth = (WrappedComponent: any) => {
 
     return null;
   };
+
+  ComponentWithAuth.displayName = `withAuth(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`;
+
+  return ComponentWithAuth;
 };
 
 export default withAuth;
