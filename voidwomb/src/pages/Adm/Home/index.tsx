@@ -1,16 +1,14 @@
-import React, { useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { supabase } from '../../../utils/SupabaseService';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+// src/pages/Adm/Home/index.tsx
+import React from 'react';
+import withAdminAuth from '../../../components/withAdminAuth';
 
-function AdmHome() {
+const AdminHome = () => {
   return (
     <div>
-      <div>Esta é a página do carrinho.</div>
-      <div>Bem-vindo!</div>
+      <h1>Admin Home</h1>
+      <p>Welcome, Admin!</p>
     </div>
   );
-}
+};
 
-export default AdmHome;
+export default withAdminAuth(AdminHome);
