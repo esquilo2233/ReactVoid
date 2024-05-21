@@ -5,116 +5,205 @@ function Rituals() {
   return (<div>
     
 
-<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    <div className="relative overflow-x-auto shadow-md sm:rounded-lg px-10 py-4">
+    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead className="text-xs text-white uppercase bg-black">
             <tr>
-                <th scope="col" class="px-6 py-3">
-                    Product name
+                <th scope="col" className="px-6 py-3">
+                    Show
                 </th>
-                <th scope="col" class="px-6 py-3">
-                    Color
+                <th scope="col" className="px-6 py-3">
+                    Date
                 </th>
-                <th scope="col" class="px-6 py-3">
-                    Category
+                <th scope="col" className="px-6 py-3">
+                    Place
                 </th>
-                <th scope="col" class="px-6 py-3">
-                    Price
+                <th scope="col" className="px-6 py-3">
+                    Venue
                 </th>
-                <th scope="col" class="px-6 py-3">
-                    Action
+                <th scope="col" className="px-6 py-3">
+                    Link
                 </th>
             </tr>
         </thead>
         <tbody>
-            <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Apple MacBook Pro 17"
+            <tr className="bg-black border-b dark:border-gray-700">
+                <th scope="row" className="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-white">
+                    Spiritual Apothéosis Album Presentation
                 </th>
-                <td class="px-6 py-4">
-                    Silver
+                <td className="px-6 py-4 text-white">
+                    01/06/2024
                 </td>
-                <td class="px-6 py-4">
-                    Laptop
+                <td className="px-6 py-4 text-white">
+                    Porto, Portugal
                 </td>
-                <td class="px-6 py-4">
-                    $2999
+                <td className="px-6 py-4 text-white">
+                    Woodstock 69 Rock Bar
                 </td>
-                <td class="px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                <td className="px-6 py-4 text-white">
+                    <a href="https://www.facebook.com/events/436507732306630" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Event</a>
                 </td>
             </tr>
-            <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Microsoft Surface Pro
+            <tr className="bg-black text-white border-b dark:border-gray-700">
+                <th scope="row" className="px-6 py-4 font-medium text-white whitespace-nowrap">
+                    Nada Music Fest
                 </th>
-                <td class="px-6 py-4">
-                    White
+                <td className="px-6 py-4 text-white">
+                    07/06/2024
                 </td>
-                <td class="px-6 py-4">
-                    Laptop PC
+                <td className="px-6 py-4 text-white">
+                    Beja, Portugal
                 </td>
-                <td class="px-6 py-4">
-                    $1999
+                <td className="px-6 py-4 text-white">
+                    Parque de Feiras e Exposições - Pavilhão dos Sabores
                 </td>
-                <td class="px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                <td className="px-6 py-4 text-white">
+                    <a href="https://www.nadafest.pt/" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Event</a>
                 </td>
             </tr>
-            <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Magic Mouse 2
+            <tr className="bg-transparent border-b dark:border-gray-700">
+                <th scope="row" className="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-white">
+                    Laurus Nobilis Music Fest
                 </th>
-                <td class="px-6 py-4">
-                    Black
+                <td className="px-6 py-4 text-white">
+                    20/07/2024
                 </td>
-                <td class="px-6 py-4">
-                    Accessories
+                <td className="px-6 py-4 text-white">
+                    Famalicão, Portugal
                 </td>
-                <td class="px-6 py-4">
-                    $99
+                <td className="px-6 py-4 text-white">
+                    Casa do Artista Amador - Louro
                 </td>
-                <td class="px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                <td className="px-6 py-4 text-white">
+                    <a href="https://www.laurusnobilis.pt/lineup/" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Event</a>
                 </td>
             </tr>
-            <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Google Pixel Phone
+            <tr className="bg-black text-white border-b dark:border-gray-700">
+                <th scope="row" className="px-6 py-4 font-medium text-white whitespace-nowrap">
+                    Spiritual Apothéosis European Tour
                 </th>
-                <td class="px-6 py-4">
-                    Gray
+                <td className="px-6 py-4 text-white">
+                    26/07/2024
                 </td>
-                <td class="px-6 py-4">
-                    Phone
+                <td className="px-6 py-4 text-white">
+                    Montpelier, France
                 </td>
-                <td class="px-6 py-4">
-                    $799
+                <td className="px-6 py-4 text-white">
+                    TBA
                 </td>
-                <td class="px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                <td className="px-6 py-4 text-white">
+                    <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Event</a>
                 </td>
             </tr>
-            <tr>
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Apple Watch 5
+            <tr className="bg-black border-b dark:border-gray-700">
+                <th scope="row" className="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-white">
+                    Spiritual Apothéosis European Tour    
                 </th>
-                <td class="px-6 py-4">
-                    Red
+                <td className="px-6 py-4 text-white">
+                    27/07/2024
                 </td>
-                <td class="px-6 py-4">
-                    Wearables
+                <td className="px-6 py-4 text-white">
+                    Luxembourg, Luxembourg
                 </td>
-                <td class="px-6 py-4">
-                    $999
+                <td className="px-6 py-4 text-white">
+                    TBA
                 </td>
-                <td class="px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                <td className="px-6 py-4 text-white">
+                    <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Event</a>
+                </td>
+            </tr>
+            <tr className="bg-black border-b dark:border-gray-700">
+                <th scope="row" className="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-white">
+                    Spiritual Apothéosis European Tour
+                </th>
+                <td className="px-6 py-4 text-white">
+                    28/07/2024
+                </td>
+                <td className="px-6 py-4 text-white">
+                    Antwerp, Belgium
+                </td>
+                <td className="px-6 py-4 text-white">
+                    TBA
+                </td>
+                <td className="px-6 py-4 text-white">
+                    <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Event</a>
+                </td>
+            </tr>
+            <tr className="bg-black border-b dark:border-gray-700">
+                <th scope="row" className="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-white">
+                    Spiritual Apothéosis European Tour
+                </th>
+                <td className="px-6 py-4 text-white">
+                    29/07/2024
+                </td>
+                <td className="px-6 py-4 text-white">
+                    Groningen, Netherlands
+                </td>
+                <td className="px-6 py-4 text-white">
+                    TBA
+                </td>
+                <td className="px-6 py-4 text-white">
+                    <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Event</a>
+                </td>
+            </tr>
+            <tr className="bg-black border-b dark:border-gray-700">
+                <th scope="row" className="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-white">
+                    Spiritual Apothéosis European Tour
+                </th>
+                <td className="px-6 py-4 text-white">
+                    31/07/2024 - 01/08/2024
+                </td>
+                <td className="px-6 py-4 text-white">
+                    Wacken Open Air
+                </td>
+                <td className="px-6 py-4 text-white">
+                    Wacken, Schleswig-Holstein, Germany
+                </td>
+                <td className="px-6 py-4 text-white">
+                    <a href="https://www.wacken.com/de/" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Event</a>
+                </td>
+            </tr>
+            <tr className="bg-black border-b dark:border-gray-700">
+                <th scope="row" className="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-white">
+                    Spiritual Apothéosis European Tour
+                </th>
+                <td className="px-6 py-4 text-white">
+                    02/08/2024
+                </td>
+                <td className="px-6 py-4 text-white">
+                    TBA
+                </td>
+                <td className="px-6 py-4 text-white">
+                    TBA
+                </td>
+                <td className="px-6 py-4 text-white">
+                    <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Event</a>
+                </td>
+            </tr>
+            <tr className="bg-black border-b dark:border-gray-700">
+                <th scope="row" className="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-white">
+                  Spiritual Apothéosis European Tour
+                </th>
+                <td className="px-6 py-4 text-white">
+                    03/08/2024
+                </td>
+                <td className="px-6 py-4 text-white">
+                    Madrid, Spain
+                </td>
+                <td className="px-6 py-4 text-white">
+                    SALA SILIKONA with NervoChaos and At War
+                </td>
+                <td className="px-6 py-4 text-white">
+                    <a href="https://www.facebook.com/events/948974503057756" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Event</a>
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
+
+
+
+
 
 
 

@@ -30,7 +30,7 @@ const Navbar: React.FC = () => {
               <Link href="/concept" className="block py-2 px-3 text-white rounded md:bg-transparent md:text-white md:p-0 dark:text-white">Concept</Link>
             </li>
             <li>
-              <Link href="/store" className="block py-2 px-3 text-white rounded md:bg-transparent md:text-white md:p-0 dark:text-white">Rituals</Link>
+              <Link href="/rituals" className="block py-2 px-3 text-white rounded md:bg-transparent md:text-white md:p-0 dark:text-white">Rituals</Link>
             </li>
             <li>
               <Link href="/contact" className="block py-2 px-3 text-white rounded md:bg-transparent md:text-white md:p-0 dark:text-white">Contact</Link>
