@@ -1,32 +1,36 @@
-// pages/auth/signin.tsx
+// pages/auth/signup.tsx
 import React, { useState } from 'react';
-import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
-export default function SignIn() {
+export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const result = await signIn('credentials', {
-      email,
-      password,
-      redirect: false,
+
+    const res = await fetch('/api/auth/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
     });
 
-    if (result?.error) {
-      setError(result.error);
+    if (res.ok) {
+      router.push('/auth/signin');
     } else {
-      // Redirecionar para a página de administração após login bem-sucedido
-      window.location.href = '/admin';
+      const data = await res.json();
+      setError(data.error);
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded shadow-md">
-        <h2 className="text-2xl font-bold text-center">Sign In</h2>
+        <h2 className="text-2xl font-bold text-center">Sign Up</h2>
         {error && <div className="text-red-500 text-center">{error}</div>}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
@@ -68,7 +72,7 @@ export default function SignIn() {
               type="submit"
               className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
-              Sign In
+              Sign Up
             </button>
           </div>
         </form>
