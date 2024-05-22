@@ -23,7 +23,7 @@ export default function SignIn() {
 
     } else {
 
-      router.push('/adm');
+      router.push('/Adm/Home');
     
     }
     

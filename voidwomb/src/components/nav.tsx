@@ -38,7 +38,7 @@ const Navbar: React.FC = () => {
             </li>
             {session?.user && session.user.is_staff && (
               <li>
-                <Link href="/admin" className="block py-2 px-3 text-white rounded md:bg-transparent md:text-white md:p-0 dark:text-white">Admin</Link>
+                <Link href="/Adm/Home" className="block py-2 px-3 text-white rounded md:bg-transparent md:text-white md:p-0 dark:text-white">Admin</Link>
               </li>
             )}
             {session?.user && (
