@@ -33,7 +33,10 @@ export default NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
+        console.log('Authorizing credentials:', credentials);
+
         if (!credentials?.email || !credentials?.password) {
+          console.log('Missing credentials');
           throw new Error('Email and password required');
         }
 
@@ -42,15 +45,18 @@ export default NextAuth({
         });
 
         if (!user) {
+          console.log('User not found');
           throw new Error('No user found with the email');
         }
 
         const isValid = await compare(credentials.password, user.password);
         if (!isValid) {
+          console.log('Invalid password');
           throw new Error('Password is incorrect');
         }
 
         const { password, ...userWithoutPassword } = user;
+        console.log('Authorized user:', userWithoutPassword);
         return userWithoutPassword as any;
       },
     }),
@@ -67,6 +73,7 @@ export default NextAuth({
         session.user.email = token.email as string;
         session.user.is_staff = token.is_staff as boolean;
       }
+      console.log('Session:', session);
       return session;
     },
     async jwt({ token, user }) {
@@ -75,6 +82,7 @@ export default NextAuth({
         token.email = user.email;
         token.is_staff = user.is_staff;
       }
+      console.log('JWT Token:', token);
       return token;
     },
   },

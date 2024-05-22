@@ -1,4 +1,3 @@
-// pages/adm/index.tsx
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 
