@@ -1,10 +1,11 @@
 import React from 'react';
+import Image from 'next/image';
 
 function Concept() {
   return (<div>
 
 <div className="flex flex-col justify-center items-center w-full h-full">
-      <img src="" alt="Background" className="w-1/2 h-1/2 object-cover mb-4" />
+      <Image src="/img/logosemfundo.png" alt="Voidwomb Logo" className="w-1/2 h-1/2 object-cover mb-4" />
       <div className="w-1/2 bg-black text-white p-4">
         <p className="text-white">
           At the dawn of 2019, Vøidwomb was born and soon revealed a strong commitment to deliver an extreme sound with its own identity. Hailing from Viana do Castelo, Portugal, the black/death metal act Vøidwomb was assembled to express the ideas of M.S. Void (vocals) and the blood brothers Noctvs (drums) and F.S. Void (bass). The latter invited Lord (guitar) to join in. After just one rehearsal, they felt the need to give more body and fullness to the band's type of sound. Fractal (guitar) entered the fray, and the circle was closed at last. The act of creation then began in plenitude.
