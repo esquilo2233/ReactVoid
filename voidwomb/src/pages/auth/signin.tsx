@@ -15,7 +15,7 @@ export default function SignIn() {
       redirect: false,
       email,
       password,
-      callbackUrl: `${window.location.origin}/Adm/Home`, // Specify the callback URL
+      callbackUrl: `${window.location.origin}/Adm/Home`,
     });
 
     if (result?.error) {
