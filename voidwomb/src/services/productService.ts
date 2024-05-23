@@ -91,3 +91,18 @@ export const deleteProduct = async (id: number) => {
     where: { id },
   });
 };
+
+export const purchaseProduct = async (productId: number, quantity: number) => {
+  const product = await prisma.product.update({
+    where: { id: productId },
+    data: {
+      stock: {
+        decrement: quantity,
+      },
+      timesPurchased: {
+        increment: 1, // Incrementa o campo timesPurchased
+      },
+    },
+  });
+  return product;
+};
