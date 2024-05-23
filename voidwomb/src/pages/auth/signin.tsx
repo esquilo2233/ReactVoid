@@ -1,31 +1,34 @@
+// pages/auth/signin.tsx
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 
-export default function AdminLogin() {
+export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const result = await signIn('credentials', {
+      redirect: false,
       email,
       password,
-      redirect: false,
+      callbackUrl: `${window.location.origin}/Adm/Home`,
     });
 
     if (result?.error) {
       setError(result.error);
     } else {
-      // Redirecionar para a página de administração após login bem-sucedido
-      window.location.href = '/Adm/Home';
+      router.push('/Adm/Home');
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded shadow-md">
-        <h2 className="text-2xl font-bold text-center">Admin Login</h2>
+        <h2 className="text-2xl font-bold text-center">Sign In</h2>
         {error && <div className="text-red-500 text-center">{error}</div>}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">

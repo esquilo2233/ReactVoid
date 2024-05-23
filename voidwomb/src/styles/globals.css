@@ -40,7 +40,7 @@ body {
   z-index: -1;
   filter: blur(8px);
   background-image: url('/img/Voidwomb-foto.jpg');
-  background-size: auto;
-  background-position: auto;
+  background-size: cover;
+  background-position: cover;
 }
 
