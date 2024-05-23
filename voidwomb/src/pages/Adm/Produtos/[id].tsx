@@ -1,4 +1,4 @@
-// pages/adm/produtos/[id].tsx
+// pages/Adm/Produtos/[id].tsx
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import ProductForm from '../../../components/ProductForm';
@@ -30,6 +30,7 @@ const EditProductPage: React.FC = () => {
 
     const images = Array.from(formData.getAll('images')).map(image => ({
       imageUrl: URL.createObjectURL(image as File),
+      productId: parseInt(id as string), // Adicionando productId
     }));
 
     const sizes = Array.from(formData.getAll('sizes')).map(size =>
