@@ -1,4 +1,3 @@
-// services/productService.ts
 import prisma from '../utils/prisma';
 
 interface ProductData {
@@ -7,6 +6,7 @@ interface ProductData {
   price: number;
   totalStock: number;
   description: string;
+  color: string; // Adicionado o campo de cor
 }
 
 interface ProductImageData {
@@ -47,6 +47,7 @@ export const addProduct = async (
   return await prisma.product.create({
     data: {
       ...product,
+      totalSelled: 0, // Inicializa o campo timesPurchased
       images: {
         create: images,
       },
@@ -90,4 +91,19 @@ export const deleteProduct = async (id: number) => {
   return await prisma.product.delete({
     where: { id },
   });
+};
+
+export const purchaseProduct = async (productId: number, quantity: number) => {
+  const product = await prisma.product.update({
+    where: { id: productId },
+    data: {
+      totalStock: {
+        decrement: quantity,
+      },
+      totalSelled: {
+        increment: 1, // Incrementa o campo timesPurchased
+      },
+    },
+  });
+  return product;
 };

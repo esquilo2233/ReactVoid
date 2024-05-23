@@ -1,4 +1,3 @@
-// pages/Adm/Produtos/add.tsx
 import React from 'react';
 import { useRouter } from 'next/router';
 import ProductForm from '../../../components/ProductForm';
@@ -14,6 +13,8 @@ const AddProductPage: React.FC = () => {
       price: parseFloat(formData.get('price') as string),
       totalStock: parseInt(formData.get('totalStock') as string),
       description: formData.get('description') as string,
+      color: formData.get('color') as string, // Adicionado campo de cor
+      timesPurchased: 0, // Inicializa o campo timesPurchased
     };
 
     const images = Array.from(formData.getAll('images')).map(image => ({
