@@ -42,28 +42,28 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, initialData = {} })
     
     <form className="max-w-md mx-auto" onSubmit={handleSubmit}>
       <div className="relative z-0 w-full mb-5 group">
-        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+        <label className="block mb-2 text-sm font-medium text-white dark:text-white">Name</label>
         <input className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" value={name} onChange={(e) => setName(e.target.value)} />
       </div>
       <div className="relative z-0 w-full mb-5 group">
-        <label>SKU</label>
-        <input type="text" value={sku} onChange={(e) => setSku(e.target.value)} />
+        <label className='block mb-2 text-sm font-medium text-white dark:text-white'>SKU</label>
+        <input className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' type="text" value={sku} onChange={(e) => setSku(e.target.value)} />
       </div>
       <div>
-        <label>Price</label>
-        <input type="number" value={price} onChange={(e) => setPrice(parseFloat(e.target.value))} />
+        <label className='block mb-2 text-sm font-medium text-white dark:text-white'>Price</label>
+        <input className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="number" value={price} onChange={(e) => setPrice(parseFloat(e.target.value))} />
       </div>
       <div>
-        <label>Total Stock</label>
+        <label className='block mb-2 text-sm font-medium text-white dark:text-white'>Total Stock</label>
         <input type="number" value={totalStock} onChange={(e) => setTotalStock(parseInt(e.target.value))} />
       </div>
       <div>
-        <label>Description</label>
-        <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
+        <label className='block mb-2 text-sm font-medium text-white dark:text-white'>Description</label>
+        <textarea className='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' value={description} onChange={(e) => setDescription(e.target.value)} />
       </div>
       <div>
-        <label>Images</label>
-        <input type="file" multiple onChange={(e) => setImages(e.target.files)} />
+        <label className='block mb-2 text-sm font-medium text-white dark:text-white'>Images</label>
+        <input className='block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400' type="file" multiple onChange={(e) => setImages(e.target.files)} />
       </div>
       <div>
         <label>Sizes</label>
