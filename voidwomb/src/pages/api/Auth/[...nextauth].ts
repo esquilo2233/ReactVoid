@@ -29,15 +29,18 @@ const allowedOrigins = ['https://voidwomb.com', 'https://dev.voidwomb.com', 'htt
 
 const checkOrigin = (req: NextApiRequest): boolean => {
   const origin = req.headers.origin;
+  console.log('Origin:', origin);
+  console.log('Allowed Origins:', allowedOrigins);
   return origin ? allowedOrigins.includes(origin) : false;
 };
 
-const authHandler = (req: NextApiRequest, res: NextApiResponse) => {
+const authHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!checkOrigin(req)) {
+    console.log('Forbidden Request:', req.headers);
     res.status(403).json({ error: 'Forbidden' });
     return;
   }
-
+  
   return NextAuth(req, res, {
     providers: [
       CredentialsProvider({
