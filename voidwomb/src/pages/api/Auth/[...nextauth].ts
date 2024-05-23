@@ -25,7 +25,7 @@ declare module 'next-auth' {
   }
 }
 
-const allowedOrigins = ['https://voidwomb.com'];
+const allowedOrigins = ['https://voidwomb.com', 'https://dev.voidwomb.com', 'https://qa.voidwomb.com'];
 
 const checkOrigin = (req: NextApiRequest): boolean => {
   const origin = req.headers.origin;
