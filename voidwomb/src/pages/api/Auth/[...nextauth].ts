@@ -32,7 +32,7 @@ const checkOrigin = (req: NextApiRequest): boolean => {
   return origin ? allowedOrigins.includes(origin) : false;
 };
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+const authHandler = (req: NextApiRequest, res: NextApiResponse) => {
   if (!checkOrigin(req)) {
     res.status(403).json({ error: 'Forbidden' });
     return;
@@ -101,3 +101,5 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 };
+
+export default authHandler;
