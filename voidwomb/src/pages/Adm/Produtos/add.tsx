@@ -1,4 +1,4 @@
-// pages/adm/produtos/add.tsx
+// pages/Adm/Produtos/add.tsx
 import React from 'react';
 import { useRouter } from 'next/router';
 import ProductForm from '../../../components/ProductForm';

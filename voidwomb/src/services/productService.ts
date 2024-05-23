@@ -1,8 +1,26 @@
 // services/productService.ts
 import prisma from '../utils/prisma';
-import { Product, ProductImage, ProductSize } from '@prisma/client';
 
-export const getProducts = async (): Promise<Product[]> => {
+interface ProductData {
+  name: string;
+  sku: string;
+  price: number;
+  totalStock: number;
+  description: string;
+}
+
+interface ProductImageData {
+  imageUrl: string;
+  productId?: number;
+}
+
+interface ProductSizeData {
+  size: string;
+  stock: number;
+  productId?: number;
+}
+
+export const getProducts = async () => {
   return await prisma.product.findMany({
     include: {
       images: true,
@@ -11,7 +29,7 @@ export const getProducts = async (): Promise<Product[]> => {
   });
 };
 
-export const getProductById = async (id: number): Promise<Product | null> => {
+export const getProductById = async (id: number) => {
   return await prisma.product.findUnique({
     where: { id },
     include: {
@@ -22,9 +40,9 @@ export const getProductById = async (id: number): Promise<Product | null> => {
 };
 
 export const addProduct = async (
-  product: Omit<Product, 'id'>,
-  images: Omit<ProductImage, 'id'>[],
-  sizes: Omit<ProductSize, 'id'>[]
+  product: ProductData,
+  images: ProductImageData[],
+  sizes: ProductSizeData[]
 ) => {
   return await prisma.product.create({
     data: {
@@ -41,9 +59,9 @@ export const addProduct = async (
 
 export const updateProduct = async (
   id: number,
-  product: Omit<Product, 'id'>,
-  images: Omit<ProductImage, 'id'>[],
-  sizes: Omit<ProductSize, 'id'>[]
+  product: ProductData,
+  images: ProductImageData[],
+  sizes: ProductSizeData[]
 ) => {
   // First, delete existing images and sizes
   await prisma.productImage.deleteMany({
