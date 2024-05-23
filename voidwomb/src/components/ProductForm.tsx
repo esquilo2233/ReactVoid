@@ -66,7 +66,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, initialData = {} })
         <input className='block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400' type="file" multiple onChange={(e) => setImages(e.target.files)} />
       </div>
       <div>
-        <label>Sizes</label>
+        <label className='block mb-2 text-sm font-medium text-white dark:text-white' >Sizes</label>
         {sizes.map((size, index) => (
           <div key={index}>
             <input
@@ -97,14 +97,14 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, initialData = {} })
             </button>
           </div>
         ))}
-        <button
+        <button className='text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2'
           type="button"
           onClick={() => setSizes([...sizes, { size: '', stock: 0 }])}
         >
           Add Size
         </button>
       </div>
-      <button type="submit">Submit</button>
+      <button className='text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 shadow-lg shadow-teal-500/50 dark:shadow-lg dark:shadow-teal-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2' type="submit">Submit</button>
     </form>
   );
 };
