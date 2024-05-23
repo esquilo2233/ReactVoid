@@ -57,8 +57,6 @@ const ProductList: React.FC<ProductListProps> = ({ products, onDelete }) => {
               </tbody>
           </table>
       </div>
-
-      
     </div>
   );
 };

@@ -25,7 +25,7 @@ const ProductAdminPage: React.FC = () => {
     <div>
       <h1>Product Administration</h1>
       
-      <button onClick={() => router.push('/adm/produtos/add')}>Add Product</button>
+      <button onClick={() => router.push('/Adm/Produtos/add')}>Add Product</button>
       <ProductList products={products} onDelete={handleDelete} />
     </div>
   );
