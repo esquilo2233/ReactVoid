@@ -14,16 +14,13 @@ const AddProductPage: React.FC = () => {
       totalStock: parseInt(formData.get('totalStock') as string),
       description: formData.get('description') as string,
       color: formData.get('color') as string,
-      timesPurchased: 0,
     };
 
     const images = Array.from(formData.getAll('images')).map(image => ({
       imageUrl: URL.createObjectURL(image as File),
     }));
 
-    const sizes = Array.from(formData.getAll('sizes')).map(size =>
-      JSON.parse(size as string)
-    );
+    const sizes = JSON.parse(formData.get('sizes') as string);
 
     await addProduct(productData, images, sizes);
     router.push('/adm/produtos');
@@ -31,7 +28,7 @@ const AddProductPage: React.FC = () => {
 
   return (
     <div>
-      <h1>Adicionar Novo Produto</h1>
+      <h1>Add New Product</h1>
       <ProductForm onSubmit={handleAddProduct} />
     </div>
   );
