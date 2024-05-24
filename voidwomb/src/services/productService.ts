@@ -6,7 +6,8 @@ interface ProductData {
   price: number;
   totalStock: number;
   description: string;
-  color: string; // Adicionado o campo de cor
+  color: string;
+  totalSelled?: number;
 }
 
 interface ProductImageData {
@@ -44,18 +45,29 @@ export const addProduct = async (
   images: ProductImageData[],
   sizes: ProductSizeData[]
 ) => {
-  return await prisma.product.create({
-    data: {
-      ...product,
-      totalSelled: 0, // Inicializa o campo timesPurchased
-      images: {
-        create: images,
+  console.log('Adding product:', product);
+  console.log('Images:', images);
+  console.log('Sizes:', sizes);
+
+  try {
+    const createdProduct = await prisma.product.create({
+      data: {
+        ...product,
+        totalSelled: product.totalSelled ?? 0,  
+        images: {
+          create: images,
+        },
+        sizes: {
+          create: sizes,
+        },
       },
-      sizes: {
-        create: sizes,
-      },
-    },
-  });
+    });
+    console.log('Created product:', createdProduct);
+    return createdProduct;
+  } catch (error) {
+    console.error('Error creating product:', error);
+    throw error;
+  }
 };
 
 export const updateProduct = async (
@@ -64,7 +76,6 @@ export const updateProduct = async (
   images: ProductImageData[],
   sizes: ProductSizeData[]
 ) => {
-  // First, delete existing images and sizes
   await prisma.productImage.deleteMany({
     where: { productId: id },
   });
@@ -72,11 +83,11 @@ export const updateProduct = async (
     where: { productId: id },
   });
 
-  // Then, update the product with new data
-  return await prisma.product.update({
+  const updatedProduct = await prisma.product.update({
     where: { id },
     data: {
       ...product,
+      totalSelled: product.totalSelled ?? 0,  
       images: {
         create: images,
       },
@@ -85,6 +96,8 @@ export const updateProduct = async (
       },
     },
   });
+
+  return updatedProduct;
 };
 
 export const deleteProduct = async (id: number) => {
@@ -101,7 +114,7 @@ export const purchaseProduct = async (productId: number, quantity: number) => {
         decrement: quantity,
       },
       totalSelled: {
-        increment: 1, // Incrementa o campo timesPurchased
+        increment: 1,
       },
     },
   });
