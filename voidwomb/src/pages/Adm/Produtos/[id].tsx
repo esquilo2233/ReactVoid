@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { getProductById, updateProduct } from '../../../services/productService';
 import withAuth from '../../../components/withAuth';
+
 const EditProduct = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -99,4 +100,4 @@ const EditProduct = () => {
   );
 };
 
-export default EditProduct;
+export default withAuth(EditProduct);

@@ -32,4 +32,4 @@ const ProductAdminPage: React.FC = () => {
   );
 };
 
-export default ProductAdminPage;
+export default withAuth(ProductAdminPage);

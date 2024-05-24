@@ -1,7 +1,10 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import ProductForm from '../../../components/ProductForm';
+<<<<<<< Updated upstream
 import { addProduct } from '../../../services/productService';
+=======
+>>>>>>> Stashed changes
 import withAuth from '../../../components/withAuth';
 
 const AddProductPage: React.FC = () => {
@@ -44,4 +47,4 @@ const AddProductPage: React.FC = () => {
   );
 };
 
-export default AddProductPage;
+export default withAuth(AddProductPage);
