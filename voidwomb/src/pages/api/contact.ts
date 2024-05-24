@@ -9,21 +9,30 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   if (req.method === 'POST') {
     const { email, subject, message } = req.body;
 
+    if (!process.env.EMAIL_SERVER_USER || !process.env.EMAIL_SERVER_PASSWORD || !process.env.EMAIL_FROM) {
+      return res.status(500).json({ message: 'Email configuration is missing.' });
+    }
+
+    if (!email || !subject || !message) {
+      return res.status(400).json({ message: 'Email, subject and message are required.' });
+    }
+
     // Configurar o transporte do Nodemailer
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: process.env.EMAIL_SERVER_HOST as string,
+      port: parseInt(process.env.EMAIL_SERVER_PORT as string, 10),
       auth: {
-        user: process.env.EMAIL_SERVER_USER, // Seu endereço de e-mail do Gmail
-        pass: process.env.EMAIL_SERVER_PASSWORD, // Sua senha ou app password do Gmail
+        user: process.env.EMAIL_SERVER_USER as string,
+        pass: process.env.EMAIL_SERVER_PASSWORD as string,
       },
     });
 
     // Configurar o e-mail
     const mailOptions = {
-      from: email,
-      to: process.env.EMAIL_TO, // Seu endereço de e-mail para onde as mensagens serão enviadas
+      from: process.env.EMAIL_FROM as string,
+      to: process.env.EMAIL_FROM as string,
       subject: `Contato: ${subject}`,
-      text: message,
+      text: `Email: ${email}\n\nMensagem:\n${message}`,
     };
 
     try {

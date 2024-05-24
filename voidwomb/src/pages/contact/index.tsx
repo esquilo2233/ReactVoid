@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Contactus() {
-  const [email, setEmail] = useState('');
-  const [subject, setSubject] = useState('');
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [subject, setSubject] = useState<string>('');
+  const [message, setMessage] = useState<string>('');
+  const [error, setError] = useState<string>('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -25,12 +26,14 @@ function Contactus() {
       setSubject('');
       setMessage('');
     } else {
-      toast.error('Failed to send message.');
+      const data = await response.json();
+      setError(data.message);
     }
   };
 
   return (
     <div>
+      <ToastContainer />
       <section className="bg-transparent dark:bg-gray-900">
         <div className="py-8 lg:py-16 px-4 mx-auto max-w-screen-md">
           <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-center text-white dark:text-white">Contact Us</h2>
