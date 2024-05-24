@@ -1,17 +1,40 @@
-import React from 'react'
-import { SessionProvider } from 'next-auth/react'
-import RootLayout from '../components/RootLayout'
-import type { AppProps } from 'next/app'
-import '../styles/globals.css'
+import React from 'react';
+import { useRouter } from 'next/router';
+import ProductForm from '../components/ProductForm';
+import { addProduct } from '../services/productService';
 
-function MyApp({ Component, pageProps }: AppProps) {
+const AddProductPage: React.FC = () => {
+  const router = useRouter();
+
+  const handleAddProduct = async (formData: FormData) => {
+    const productData = {
+      name: formData.get('name') as string,
+      sku: formData.get('sku') as string,
+      price: parseFloat(formData.get('price') as string),
+      totalStock: parseInt(formData.get('totalStock') as string),
+      description: formData.get('description') as string,
+      color: formData.get('color') as string,
+      totalSelled: 0,
+    };
+
+    const images = Array.from(formData.getAll('images')).map((image) => ({
+      imageUrl: URL.createObjectURL(image as File),
+    }));
+
+    const sizes = Array.from(formData.getAll('sizes')).map((size) =>
+      JSON.parse(size as string)
+    );
+
+    await addProduct(productData, images, sizes);
+    router.push('/adm/produtos');
+  };
+
   return (
-    <SessionProvider session={pageProps.session}>
-      <RootLayout>
-        <Component {...pageProps} />
-      </RootLayout>
-    </SessionProvider>
-  )
-}
+    <div>
+      <h1>Add New Product</h1>
+      <ProductForm onSubmit={handleAddProduct} />
+    </div>
+  );
+};
 
-export default MyApp
+export default AddProductPage;

@@ -6,7 +6,8 @@ interface ProductData {
   price: number;
   totalStock: number;
   description: string;
-  color: string; // Adicionado o campo de cor
+  color: string;
+  totalSelled?: number;
 }
 
 interface ProductImageData {
@@ -47,7 +48,7 @@ export const addProduct = async (
   return await prisma.product.create({
     data: {
       ...product,
-      totalSelled: 0, // Inicializa o campo timesPurchased
+      totalSelled: product.totalSelled ?? 0,  // Garantir que totalSelled tenha um valor padrão de 0
       images: {
         create: images,
       },
@@ -77,6 +78,7 @@ export const updateProduct = async (
     where: { id },
     data: {
       ...product,
+      totalSelled: product.totalSelled ?? 0,  // Garantir que totalSelled tenha um valor padrão de 0
       images: {
         create: images,
       },
@@ -101,7 +103,7 @@ export const purchaseProduct = async (productId: number, quantity: number) => {
         decrement: quantity,
       },
       totalSelled: {
-        increment: 1, // Incrementa o campo timesPurchased
+        increment: 1, // Incrementa o campo totalSelled
       },
     },
   });

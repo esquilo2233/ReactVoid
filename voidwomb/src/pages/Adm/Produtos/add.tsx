@@ -14,13 +14,16 @@ const AddProductPage: React.FC = () => {
       totalStock: parseInt(formData.get('totalStock') as string),
       description: formData.get('description') as string,
       color: formData.get('color') as string,
+      totalSelled: 0,
     };
 
     const images = Array.from(formData.getAll('images')).map(image => ({
       imageUrl: URL.createObjectURL(image as File),
     }));
 
-    const sizes = JSON.parse(formData.get('sizes') as string);
+    const sizes = Array.from(formData.getAll('sizes')).map(size =>
+      JSON.parse(size as string)
+    );
 
     await addProduct(productData, images, sizes);
     router.push('/adm/produtos');
