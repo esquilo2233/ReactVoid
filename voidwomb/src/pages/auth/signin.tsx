@@ -1,25 +1,27 @@
 // pages/auth/signin.tsx
-import React, { useState } from 'react';
 import { signIn } from 'next-auth/react';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const result = await signIn('credentials', {
+      redirect: false,
       email,
       password,
-      redirect: false,
+      callbackUrl: `${window.location.origin}/Adm/Home`,
     });
 
     if (result?.error) {
       setError(result.error);
     } else {
-      // Redirecionar para a página de administração após login bem-sucedido
-      window.location.href = '/admin';
+      router.push('/Adm/Home');
     }
   };
 

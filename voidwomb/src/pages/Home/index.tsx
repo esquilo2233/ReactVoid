@@ -6,7 +6,8 @@ export default function Home() {
   return (
     <div className="bg-gray-100 text-white content" style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
       <Head>
-      <title>Voidwomb</title>
+      <title>Voidwomb - Official Site</title>
+      <meta name="description" content="Official site of Voidwomb. Explore our music, news, and events." />
       </Head>
       <div className="bg-transparent rounded-lg mx-auto max-w-2xl">
         <header className="bg-transparent p-4">
