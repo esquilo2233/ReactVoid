@@ -13,8 +13,8 @@ const AddProductPage: React.FC = () => {
       price: parseFloat(formData.get('price') as string),
       totalStock: parseInt(formData.get('totalStock') as string),
       description: formData.get('description') as string,
-      color: formData.get('color') as string, // Adicionado campo de cor
-      timesPurchased: 0, // Inicializa o campo timesPurchased
+      color: formData.get('color') as string,
+      timesPurchased: 0,
     };
 
     const images = Array.from(formData.getAll('images')).map(image => ({
@@ -31,7 +31,7 @@ const AddProductPage: React.FC = () => {
 
   return (
     <div>
-      <h1>Add New Product</h1>
+      <h1>Adicionar Novo Produto</h1>
       <ProductForm onSubmit={handleAddProduct} />
     </div>
   );

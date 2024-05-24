@@ -1,110 +1,84 @@
-// components/ProductForm.tsx
 import React, { useState } from 'react';
 
 interface ProductFormProps {
-  onSubmit: (data: any) => void;
-  initialData?: any;
+  onSubmit: (formData: FormData) => void;
 }
 
-const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, initialData = {} }) => {
-  const [name, setName] = useState(initialData.name || '');
-  const [sku, setSku] = useState(initialData.sku || '');
-  const [price, setPrice] = useState(initialData.price || 0);
-  const [totalStock, setTotalStock] = useState(initialData.totalStock || 0);
-  const [description, setDescription] = useState(initialData.description || '');
-  const [images, setImages] = useState<FileList | null>(null);
-  const [sizes, setSizes] = useState<{ size: string; stock: number }[]>(initialData.sizes || []);
+const ProductForm: React.FC<ProductFormProps> = ({ onSubmit }) => {
+  const [name, setName] = useState('');
+  const [sku, setSku] = useState('');
+  const [price, setPrice] = useState('');
+  const [totalStock, setTotalStock] = useState('');
+  const [description, setDescription] = useState('');
+  const [color, setColor] = useState('');
+  const [images, setImages] = useState<File[]>([]);
+  const [sizes, setSizes] = useState<{ size: string; stock: number }[]>([{ size: '', stock: 0 }]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('sku', sku);
+    formData.append('price', price);
+    formData.append('totalStock', totalStock);
+    formData.append('description', description);
+    formData.append('color', color);
+    images.forEach(image => formData.append('images', image));
+    sizes.forEach(size => formData.append('sizes', JSON.stringify(size)));
+    onSubmit(formData);
+  };
 
-    const productData = new FormData();
-    productData.append('name', name);
-    productData.append('sku', sku);
-    productData.append('price', price.toString());
-    productData.append('totalStock', totalStock.toString());
-    productData.append('description', description);
-    
-    if (images) {
-      Array.from(images).forEach(image => {
-        productData.append('images', image);
-      });
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setImages(Array.from(e.target.files));
     }
-    
-    sizes.forEach(size => {
-      productData.append('sizes', JSON.stringify(size));
-    });
+  };
 
-    onSubmit(productData);
+  const handleSizeChange = (index: number, field: string, value: string | number) => {
+    const newSizes = [...sizes];
+    newSizes[index] = { ...newSizes[index], [field]: value };
+    setSizes(newSizes);
+  };
+
+  const addSizeField = () => {
+    setSizes([...sizes, { size: '', stock: 0 }]);
   };
 
   return (
-    
-    <form className="max-w-md mx-auto" onSubmit={handleSubmit}>
-      <div className="relative z-0 w-full mb-5 group">
-        <label className="block mb-2 text-sm font-medium text-white dark:text-white">Name</label>
-        <input className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" value={name} onChange={(e) => setName(e.target.value)} />
-      </div>
-      <div className="relative z-0 w-full mb-5 group">
-        <label className='block mb-2 text-sm font-medium text-white dark:text-white'>SKU</label>
-        <input className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' type="text" value={sku} onChange={(e) => setSku(e.target.value)} />
+    <form onSubmit={handleSubmit}>
+      <input type="text" placeholder="Nome" value={name} onChange={(e) => setName(e.target.value)} required />
+      <input type="text" placeholder="SKU" value={sku} onChange={(e) => setSku(e.target.value)} required />
+      <input type="number" placeholder="Preço" value={price} onChange={(e) => setPrice(e.target.value)} required />
+      <input type="number" placeholder="Estoque Total" value={totalStock} onChange={(e) => setTotalStock(e.target.value)} required />
+      <textarea placeholder="Descrição" value={description} onChange={(e) => setDescription(e.target.value)} required />
+      <input type="text" placeholder="Cor" value={color} onChange={(e) => setColor(e.target.value)} required />
+      <div>
+        <h3>Imagens</h3>
+        <input type="file" multiple onChange={handleImageChange} />
       </div>
       <div>
-        <label className='block mb-2 text-sm font-medium text-white dark:text-white'>Price</label>
-        <input className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500' type="number" value={price} onChange={(e) => setPrice(parseFloat(e.target.value))} />
-      </div>
-      <div>
-        <label className='block mb-2 text-sm font-medium text-white dark:text-white'>Total Stock</label>
-        <input type="number" value={totalStock} onChange={(e) => setTotalStock(parseInt(e.target.value))} />
-      </div>
-      <div>
-        <label className='block mb-2 text-sm font-medium text-white dark:text-white'>Description</label>
-        <textarea className='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' value={description} onChange={(e) => setDescription(e.target.value)} />
-      </div>
-      <div>
-        <label className='block mb-2 text-sm font-medium text-white dark:text-white'>Images</label>
-        <input className='block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400' type="file" multiple onChange={(e) => setImages(e.target.files)} />
-      </div>
-      <div>
-        <label className='block mb-2 text-sm font-medium text-white dark:text-white' >Sizes</label>
+        <h3>Tamanhos</h3>
         {sizes.map((size, index) => (
           <div key={index}>
             <input
               type="text"
-              placeholder="Size"
+              placeholder="Tamanho"
               value={size.size}
-              onChange={(e) => {
-                const newSizes = [...sizes];
-                newSizes[index].size = e.target.value;
-                setSizes(newSizes);
-              }}
+              onChange={(e) => handleSizeChange(index, 'size', e.target.value)}
+              required
             />
             <input
               type="number"
-              placeholder="Stock"
+              placeholder="Estoque do tamanho"
               value={size.stock}
-              onChange={(e) => {
-                const newSizes = [...sizes];
-                newSizes[index].stock = parseInt(e.target.value);
-                setSizes(newSizes);
-              }}
+              onChange={(e) => handleSizeChange(index, 'stock', parseInt(e.target.value))}
+              required
             />
-            <button
-              type="button"
-              onClick={() => setSizes(sizes.filter((_, i) => i !== index))}
-            >
-              Remove
-            </button>
           </div>
         ))}
-        <button className='text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2'
-          type="button"
-          onClick={() => setSizes([...sizes, { size: '', stock: 0 }])}
-        >
-          Add Size
-        </button>
+        <button type="button" onClick={addSizeField}>Adicionar Tamanho</button>
       </div>
-      <button className='text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 shadow-lg shadow-teal-500/50 dark:shadow-lg dark:shadow-teal-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2' type="submit">Submit</button>
+      <button type="submit">Adicionar Produto</button>
     </form>
   );
 };
