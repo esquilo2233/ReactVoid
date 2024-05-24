@@ -13,28 +13,37 @@ const handleProducts = async (req: NextApiRequest, res: NextApiResponse) => {
   } else if (req.method === 'POST') {
     const { name, sku, price, totalStock, description, color, images, sizes } = req.body;
 
-    const product = await prisma.product.create({
-      data: {
-        name,
-        sku,
-        price,
-        totalStock,
-        description,
-        color,
-        totalSelled: 0, // Inicializa o campo totalSelled
-        images: {
-          create: images,
+    console.log('Received POST request with data:', req.body);
+
+    try {
+      const product = await prisma.product.create({
+        data: {
+          name,
+          sku,
+          price,
+          totalStock,
+          description,
+          color,
+          totalSelled: 0,
+          images: {
+            create: images,
+          },
+          sizes: {
+            create: sizes,
+          },
         },
-        sizes: {
-          create: sizes,
-        },
-      },
-    });
-    res.status(201).json(product);
+      });
+
+      console.log('Product created:', product);
+
+      res.status(201).json(product);
+    } catch (error) {
+      console.error('Error creating product:', error);
+      res.status(500).json({ error: 'Failed to create product' });
+    }
   } else if (req.method === 'PUT') {
     const { id, name, sku, price, totalStock, description, color, images, sizes } = req.body;
 
-    // First, delete existing images and sizes
     await prisma.productImage.deleteMany({
       where: { productId: id },
     });
@@ -42,7 +51,6 @@ const handleProducts = async (req: NextApiRequest, res: NextApiResponse) => {
       where: { productId: id },
     });
 
-    // Then, update the product with new data
     const product = await prisma.product.update({
       where: { id },
       data: {
@@ -60,6 +68,7 @@ const handleProducts = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       },
     });
+
     res.status(200).json(product);
   } else if (req.method === 'DELETE') {
     const { id } = req.body;

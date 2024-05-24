@@ -25,7 +25,13 @@ const AddProductPage: React.FC = () => {
       JSON.parse(size as string)
     );
 
-    await addProduct(productData, images, sizes);
+    console.log('Submitting Product:', productData);
+    console.log('Images:', images);
+    console.log('Sizes:', sizes);
+
+    const response = await addProduct(productData, images, sizes);
+    console.log('Response:', response);
+
     router.push('/adm/produtos');
   };
 
