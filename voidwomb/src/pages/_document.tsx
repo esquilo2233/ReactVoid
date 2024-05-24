@@ -10,7 +10,6 @@ class MyDocument extends Document {
         return (
             <Html lang="pt-pt">
                 <Head>
-                    
                     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
                 </Head>
                 <body className="flex flex-col min-h-screen">
