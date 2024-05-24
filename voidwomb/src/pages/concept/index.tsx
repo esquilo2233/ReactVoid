@@ -4,7 +4,7 @@ function Concept() {
   return (<div>
 
 <div className="flex flex-col justify-center items-center w-full h-full">
-      <img src="" alt="Background" className="w-1/2 h-1/2 object-cover mb-4" />
+      <img src="/img/vo.jpg" alt="Background" className="w-1/2 h-1/2 object-cover mb-4 mt-4" />
 
       <div className="w-1/2 bg-black text-white p-4">
         <p className="text-white">
