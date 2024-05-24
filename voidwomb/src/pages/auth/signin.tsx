@@ -1,5 +1,5 @@
 // pages/auth/signin.tsx
-import { signIn, getSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 
@@ -15,18 +15,14 @@ export default function SignIn() {
       redirect: false,
       email,
       password,
+      callbackUrl: `${window.location.origin}/Adm/Home`,
     });
 
     if (result?.error) {
-
       setError(result.error);
-
     } else {
-
       router.push('/Adm/Home');
-    
     }
-    
   };
 
   return (
