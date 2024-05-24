@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import ProductList from '.././../../components/ProductList';
 import { getProducts, deleteProduct } from '../../../services/productService';
+import withAuth from '../../../components/withAuth';
 
 const ProductAdminPage: React.FC = () => {
   const [products, setProducts] = useState<any[]>([]);

@@ -2,6 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import ProductForm from '../../../components/ProductForm';
 import { addProduct } from '../../../services/productService';
+import withAuth from '../../../components/withAuth';
 
 const AddProductPage: React.FC = () => {
   const router = useRouter();
