@@ -1,8 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import ProductForm from '../../../components/ProductForm';
-import { addProduct } from '../../../services/productService';
-import withAuth from '../../../components/withAuth';
 
 const AddProductPage: React.FC = () => {
   const router = useRouter();
@@ -31,9 +29,22 @@ const AddProductPage: React.FC = () => {
     console.log('Sizes:', sizes);
 
     try {
-      const response = await addProduct(productData, images, sizes);
-      console.log('Response:', response);
-      router.push('/adm/produtos');
+      const response = await fetch('/api/addProduct', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...productData, images, sizes }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Response:', data);
+        router.push('/adm/produtos');
+      } else {
+        const errorData = await response.json();
+        console.error('Error adding product:', errorData);
+      }
     } catch (error) {
       console.error('Error adding product:', error);
     }
@@ -47,4 +58,4 @@ const AddProductPage: React.FC = () => {
   );
 };
 
-export default withAuth(AddProductPage);
+export default AddProductPage;
