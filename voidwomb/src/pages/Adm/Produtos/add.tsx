@@ -30,10 +30,13 @@ const AddProductPage: React.FC = () => {
     console.log('Images:', images);
     console.log('Sizes:', sizes);
 
-    const response = await addProduct(productData, images, sizes);
-    console.log('Response:', response);
-
-    router.push('/adm/produtos');
+    try {
+      const response = await addProduct(productData, images, sizes);
+      console.log('Response:', response);
+      router.push('/adm/produtos');
+    } catch (error) {
+      console.error('Error adding product:', error);
+    }
   };
 
   return (
@@ -44,4 +47,4 @@ const AddProductPage: React.FC = () => {
   );
 };
 
-export default AddProductPage;
+export default withAuth(AddProductPage);
