@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 
 function Store() {
   const [mainImage, setMainImage] = useState("/img/Merch_FotosSA/T-ShirtRedSA_Front.jpg");
@@ -14,39 +15,45 @@ function Store() {
 
   return (
     <div>
-      <section className="py-8  md:py-16 dark:bg-gray-900 antialiased text-white">
+      <section className="py-8 md:py-16 dark:bg-gray-900 antialiased text-white">
         <div className="max-w-screen-xl px-4 mx-auto 2xl:px-0">
           <div className="lg:grid lg:grid-cols-2 lg:gap-8 xl:gap-16">
             <div className="shrink-0 max-w-md lg:max-w-lg mx-auto">
               <div className="gallery-container flex">
                 <div className="image-thumbnails flex flex-col space-y-4 mr-6">
-                  <img 
+                  <Image 
                     src="/img/Merch_FotosSA/T-ShirtRedSA_BackZoom.jpg" 
                     alt="Thumbnail 1" 
                     onClick={() => handleThumbnailClick("/img/Merch_FotosSA/T-ShirtRedSA_BackZoom.jpg")} 
                     className="cursor-pointer w-32 h-32 object-contain border" 
+                    width={128}
+                    height={128}
                   />
-                  <img 
+                  <Image 
                     src="/img/Merch_FotosSA/T-ShirtRedSA_Back.jpg" 
                     alt="Thumbnail 3" 
                     onClick={() => handleThumbnailClick("/img/Merch_FotosSA/T-ShirtRedSA_Back.jpg")} 
                     className="cursor-pointer w-32 h-32 object-contain border" 
+                    width={128}
+                    height={128}
                   />
-                  <img 
+                  <Image 
                     src="/img/Merch_FotosSA/T-ShirtRedSA_Front.jpg" 
                     alt="Thumbnail 4" 
                     onClick={() => handleThumbnailClick("/img/Merch_FotosSA/T-ShirtRedSA_Front.jpg")} 
                     className="cursor-pointer w-32 h-32 object-contain border" 
+                    width={128}
+                    height={128}
                   />
                 </div>
                 <div className="main-image">
-                  <img src={mainImage} alt="Main" className="w-full object-contain" />
+                  <Image src={mainImage} alt="Main" className="w-full object-contain" width={500} height={500} />
                 </div>
               </div>
             </div>
             <div className="mt-6 sm:mt-8 lg:mt-0">
               <h1 className="text-xl font-semibold sm:text-2xl dark:text-white">
-                Apple iMac 24" All-In-One Computer, Apple M1, 8GB RAM, 256GB SSD, Mac OS, Pink
+                Apple iMac 24&quot; All-In-One Computer, Apple M1, 8GB RAM, 256GB SSD, Mac OS, Pink
               </h1>
               <div className="mt-4 sm:items-center sm:gap-4 sm:flex">
                 <p className="text-2xl font-extrabold sm:text-3xl dark:text-white">
@@ -55,25 +62,24 @@ function Store() {
               </div>
               <div className="mt-6 sm:gap-4 sm:items-center sm:flex sm:mt-8">
                 
-<button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" className="text-white bg-black  focus:ring-4 focus:outline-none focus:ring-gray-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">Select a size <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+<button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" className="text-white bg-black focus:ring-4 focus:outline-none focus:ring-gray-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">Select a size <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+<path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4"/>
 </svg>
 </button>
-
 
 <div id="dropdown" className="z-10 hidden bg-black text-white divide-y divide-black rounded-lg shadow w-44 dark:bg-black">
     <ul className="py-2 text-sm text-white bg-black dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
       <li>
-        <a href="#" className="block px-4 py-2 bg-black text-white hover:bg-gray-100 dark:hover:bg-black dark:hover:text-white">Dashboard</a>
+        <a href="#" className="block px-4 py-2 bg-black text-white hover:bg-gray-100 dark:hover:bg-black dark:hover:text-white">Small</a>
       </li>
       <li>
-        <a href="#" className="block px-4 py-2 bg-black text-white hover:bg-gray-100 dark:hover:bg-black dark:hover:text-white">Settings</a>
+        <a href="#" className="block px-4 py-2 bg-black text-white hover:bg-gray-100 dark:hover:bg-black dark:hover:text-white">Medium</a>
       </li>
       <li>
-        <a href="#" className="block px-4 py-2 bg-black text-white hover:bg-gray-100 dark:hover:bg-black dark:hover:text-white">Earnings</a>
+        <a href="#" className="block px-4 py-2 bg-black text-white hover:bg-gray-100 dark:hover:bg-black dark:hover:text-white">Large</a>
       </li>
       <li>
-        <a href="#" className="block px-4 py-2 bg-black text-white hover:bg-gray-100 dark:hover:bg-black dark:hover:text-white">Sign out</a>
+        <a href="#" className="block px-4 py-2 bg-black text-white hover:bg-gray-100 dark:hover:bg-black dark:hover:text-white">X-Large</a>
       </li>
     </ul>
 </div>

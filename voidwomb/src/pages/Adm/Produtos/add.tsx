@@ -1,4 +1,3 @@
-// Conteúdo do arquivo add.tsx
 import React from 'react';
 import { useRouter } from 'next/router';
 import ProductForm from '../../../components/ProductForm';
@@ -30,7 +29,7 @@ const AddProductPage: React.FC = () => {
     console.log('Sizes:', sizes);
 
     try {
-      const response = await fetch('/api/addProduct', {
+      const response = await fetch('/api/products', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

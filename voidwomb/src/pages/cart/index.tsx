@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
+import Image from 'next/image';
 
 function Cart() {
   return (
@@ -13,8 +14,8 @@ function Cart() {
               <div className="rounded-lg border border-gray-200 bg-transparent p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
                 <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
                   <a href="#" className="shrink-0 md:order-1">
-                    <img className="h-20 w-20 dark:hidden" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front.svg" alt="imac image" />
-                    <img className="hidden h-20 w-20 dark:block" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front-dark.svg" alt="imac image" />
+                    <Image className="h-20 w-20 dark:hidden" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front.svg" alt="imac image" width={80} height={80} />
+                    <Image className="hidden h-20 w-20 dark:block" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front-dark.svg" alt="imac image" width={80} height={80} />
                   </a>
 
                   <label htmlFor="counter-input" className="sr-only">Choose quantity:</label>
@@ -38,7 +39,7 @@ function Cart() {
                   </div>
 
                   <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
-                    <a href="#" className="text-base font-medium text-white hover:underline dark:text-white">PC system All in One APPLE iMac (2023) mqrq3ro/a, Apple M3, 24" Retina 4.5K, 8GB, SSD 256GB, 10-core GPU, Keyboard layout INT</a>
+                    <a href="#" className="text-base font-medium text-white hover:underline dark:text-white">PC system All in One APPLE iMac (2023) mqrq3ro/a, Apple M3, 24&quot; Retina 4.5K, 8GB, SSD 256GB, 10-core GPU, Keyboard layout INT</a>
 
                     <div className="flex items-center gap-4">
                       <button type="button" className="inline-flex items-center text-sm font-medium text-red-600 hover:underline dark:text-red-500">
@@ -55,8 +56,8 @@ function Cart() {
               <div className="rounded-lg border border-gray-200 bg-transparent p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
                 <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
                   <a href="#" className="shrink-0 md:order-1">
-                    <img className="h-20 w-20 dark:hidden" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/apple-watch-light.svg" alt="apple watch image" />
-                    <img className="hidden h-20 w-20 dark:block" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/apple-watch-dark.svg" alt="apple watch image" />
+                    <Image className="h-20 w-20 dark:hidden" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/apple-watch-light.svg" alt="apple watch image" width={80} height={80} />
+                    <Image className="hidden h-20 w-20 dark:block" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/apple-watch-dark.svg" alt="apple watch image" width={80} height={80} />
                   </a>
 
                   <label htmlFor="counter-input2" className="sr-only">Choose quantity:</label>
@@ -114,42 +115,45 @@ function Cart() {
                   </dl>
                 </div>
 
-                <Link href="/cart/checkout" className="flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none border focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Proceed to Checkout to choose your shipping mode</Link>
+                <Link href="/cart/checkout" passHref>
+                  <a className="flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none border focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Proceed to Checkout to choose your shipping mode</a>
+                </Link>
 
                 <div className="flex items-center justify-center gap-2">
                   <span className="text-sm font-normal text-white dark:text-gray-400"> or </span>
-                  <a href="#" title="" className="inline-flex text-white items-center gap-2 text-sm font-medium text-primary-700 underline hover:no-underline dark:text-primary-500">
-                    Continue Shopping
-                    <svg className="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 12H5m14 0-4 4m4-4-4-4" />
-                    </svg>
-                  </a>
+                  <Link href="#">
+                    <a title="" className="inline-flex text-white items-center gap-2 text-sm font-medium text-primary-700 underline hover:no-underline dark:text-primary-500">
+                      Continue Shopping
+                      <svg className="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 12H5m14 0-4 4m4-4-4-4" />
+                      </svg>
+                    </a>
+                  </Link>
                 </div>
               </div>
 
               <div className="space-y-4 rounded-lg border border-gray-200 bg-transparent p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
-  <form className="space-y-4">
-    <div>
-      <label htmlFor="voucher" className="mb-2 block text-sm font-medium text-white dark:text-white">
-        Do you have a voucher or gift card?
-      </label>
-      <input
-        type="text"
-        id="voucher"
-        className="block w-full rounded-lg border border-gray-300 bg-transparent p-2.5 text-sm text-white focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
-        placeholder=""
-        required
-      />
-    </div>
-    <button
-      type="submit"
-      className="flex items-center justify-center mx-auto rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 border focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-    >
-      Apply Code
-    </button>
-  </form>
-</div>
-
+                <form className="space-y-4">
+                  <div>
+                    <label htmlFor="voucher" className="mb-2 block text-sm font-medium text-white dark:text-white">
+                      Do you have a voucher or gift card?
+                    </label>
+                    <input
+                      type="text"
+                      id="voucher"
+                      className="block w-full rounded-lg border border-gray-300 bg-transparent p-2.5 text-sm text-white focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
+                      placeholder=""
+                      required
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="flex items-center justify-center mx-auto rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 border focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  >
+                    Apply Code
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
