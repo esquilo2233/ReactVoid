@@ -1,3 +1,4 @@
+// Conteúdo do arquivo add.tsx
 import React from 'react';
 import { useRouter } from 'next/router';
 import ProductForm from '../../../components/ProductForm';
@@ -37,14 +38,15 @@ const AddProductPage: React.FC = () => {
         body: JSON.stringify({ ...productData, images, sizes }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Response:', data);
-        router.push('/adm/produtos');
-      } else {
+      if (!response.ok) {
         const errorData = await response.json();
         console.error('Error adding product:', errorData);
+        return;
       }
+
+      const data = await response.json();
+      console.log('Response:', data);
+      router.push('/adm/produtos');
     } catch (error) {
       console.error('Error adding product:', error);
     }

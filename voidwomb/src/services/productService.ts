@@ -1,3 +1,4 @@
+// Conteúdo do arquivo productService.ts
 import prisma from '../utils/prisma';
 
 interface ProductData {
@@ -53,7 +54,7 @@ export const addProduct = async (
     const createdProduct = await prisma.product.create({
       data: {
         ...product,
-        totalSelled: product.totalSelled ?? 0,  
+        totalSelled: product.totalSelled ?? 0,  // Garantir que totalSelled tenha um valor padrão de 0
         images: {
           create: images,
         },
@@ -68,55 +69,4 @@ export const addProduct = async (
     console.error('Error creating product:', error);
     throw error;
   }
-};
-
-export const updateProduct = async (
-  id: number,
-  product: ProductData,
-  images: ProductImageData[],
-  sizes: ProductSizeData[]
-) => {
-  await prisma.productImage.deleteMany({
-    where: { productId: id },
-  });
-  await prisma.productSize.deleteMany({
-    where: { productId: id },
-  });
-
-  const updatedProduct = await prisma.product.update({
-    where: { id },
-    data: {
-      ...product,
-      totalSelled: product.totalSelled ?? 0,  
-      images: {
-        create: images,
-      },
-      sizes: {
-        create: sizes,
-      },
-    },
-  });
-
-  return updatedProduct;
-};
-
-export const deleteProduct = async (id: number) => {
-  return await prisma.product.delete({
-    where: { id },
-  });
-};
-
-export const purchaseProduct = async (productId: number, quantity: number) => {
-  const product = await prisma.product.update({
-    where: { id: productId },
-    data: {
-      totalStock: {
-        decrement: quantity,
-      },
-      totalSelled: {
-        increment: 1,
-      },
-    },
-  });
-  return product;
 };

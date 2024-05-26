@@ -1,3 +1,4 @@
+// Conteúdo do arquivo addProduct.ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../utils/prisma';
 
@@ -14,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           totalStock,
           description,
           color,
-          totalSelled: 0, // Inicializa o campo totalSelled
+          totalSelled: 0,
           images: {
             create: images,
           },
