@@ -1,4 +1,4 @@
-import prisma from '../utils/prisma';
+import axios from 'axios';
 
 export interface Product {
   id: number;
@@ -29,54 +29,25 @@ export interface ProductSizeData {
 }
 
 export const getProducts = async (): Promise<Product[]> => {
-  return await prisma.product.findMany({
-    include: {
-      images: true,
-      sizes: true,
-    },
-  });
+  const response = await axios.get('/api/products');
+  return response.data;
 };
 
 export const getProductById = async (id: number): Promise<Product | null> => {
-  return await prisma.product.findUnique({
-    where: { id },
-    include: {
-      images: true,
-      sizes: true,
-    },
-  });
+  const response = await axios.get(`/api/products/${id}`);
+  return response.data;
 };
 
 export const addProduct = async (
-  product: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>,
+  product: any,
   images: ProductImageData[],
   sizes: ProductSizeData[]
-): Promise<Product> => {
-  console.log('Adding product:', product);
-  console.log('Images:', images);
-  console.log('Sizes:', sizes);
-
+) => {
   try {
-    const createdProduct = await prisma.product.create({
-      data: {
-        ...product,
-        totalSelled: product.totalSelled ?? 0,
-        images: {
-          create: images,
-        },
-        sizes: {
-          create: sizes,
-        },
-      },
-      include: {
-        images: true,
-        sizes: true,
-      },
-    });
-    console.log('Created product:', createdProduct);
-    return createdProduct;
+    const response = await axios.post('/api/products', { product, images, sizes });
+    return response.data;
   } catch (error) {
-    console.error('Error creating product:', error);
+    console.error('Error adding product:', error);
     throw error;
   }
 };
@@ -88,31 +59,8 @@ export const updateProduct = async (
   sizes: ProductSizeData[]
 ): Promise<Product> => {
   try {
-    await prisma.productImage.deleteMany({
-      where: { productId: id },
-    });
-    await prisma.productSize.deleteMany({
-      where: { productId: id },
-    });
-
-    const updatedProduct = await prisma.product.update({
-      where: { id },
-      data: {
-        ...product,
-        totalSelled: product.totalSelled ?? 0,
-        images: {
-          create: images,
-        },
-        sizes: {
-          create: sizes,
-        },
-      },
-      include: {
-        images: true,
-        sizes: true,
-      },
-    });
-    return updatedProduct;
+    const response = await axios.put(`/api/products/${id}`, { product, images, sizes });
+    return response.data;
   } catch (error) {
     console.error('Error updating product:', error);
     throw error;
@@ -121,17 +69,11 @@ export const updateProduct = async (
 
 export const deleteProduct = async (id: number): Promise<Product> => {
   try {
-    const deletedProduct = await prisma.product.delete({
-      where: { id },
-      include: {
-        images: true,
-        sizes: true,
-      },
-    });
-    return deletedProduct;
+    const response = await axios.delete(`/api/products/${id}`);
+    return response.data;
   } catch (error) {
     console.error('Error deleting product:', error);
     throw error;
   }
 };
-
+  
