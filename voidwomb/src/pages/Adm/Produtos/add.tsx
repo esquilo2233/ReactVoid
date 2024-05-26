@@ -1,6 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import ProductForm from '../../../components/ProductForm';
+import { addProduct } from '../../../services/productService';
 
 const AddProductPage: React.FC = () => {
   const router = useRouter();
@@ -49,6 +50,7 @@ const AddProductPage: React.FC = () => {
     } catch (error) {
       console.error('Error adding product:', error);
     }
+
   };
 
   return (

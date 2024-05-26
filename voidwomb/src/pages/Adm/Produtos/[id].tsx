@@ -4,6 +4,7 @@ import { getProductById, updateProduct, Product } from '../../../services/produc
 import withAuth from '../../../components/withAuth';
 import ProductForm from '../../../components/ProductForm';
 
+
 const EditProduct = () => {
   const router = useRouter();
   const { id } = router.query;
