@@ -89,7 +89,7 @@ function Rituals() {
                     Montpelier, France
                 </td>
                 <td className="px-6 py-4 text-white">
-                    TBA
+                    Secret Place
                 </td>
                 <td className="px-6 py-4 text-white">
                     <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Event</a>
@@ -103,10 +103,10 @@ function Rituals() {
                     27/07/2024
                 </td>
                 <td className="px-6 py-4 text-white">
-                    Luxembourg, Luxembourg
+                    Belval, Luxembourg
                 </td>
                 <td className="px-6 py-4 text-white">
-                    TBA
+                    MK Bar w/ Infestation(DE)
                 </td>
                 <td className="px-6 py-4 text-white">
                     <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Event</a>

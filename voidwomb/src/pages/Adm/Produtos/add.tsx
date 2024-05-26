@@ -29,10 +29,28 @@ const AddProductPage: React.FC = () => {
     console.log('Images:', images);
     console.log('Sizes:', sizes);
 
-    const response = await addProduct(productData, images, sizes);
-    console.log('Response:', response);
+    try {
+      const response = await fetch('/api/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...productData, images, sizes }),
+      });
 
-    router.push('/adm/produtos');
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error adding product:', errorData);
+        return;
+      }
+
+      const data = await response.json();
+      console.log('Response:', data);
+      router.push('/adm/produtos');
+    } catch (error) {
+      console.error('Error adding product:', error);
+    }
+
   };
 
   return (
