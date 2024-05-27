@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import ProductForm from '../../../components/ProductForm';
-import { Category } from '@prisma/client';
+import { Category } from '../../../types';
 
 interface Product {
   id: number;

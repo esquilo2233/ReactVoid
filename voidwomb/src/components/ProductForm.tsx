@@ -1,6 +1,6 @@
 // src/components/ProductForm.tsx
 import React, { useState } from 'react';
-import { Category } from '@prisma/client';
+import { Category } from '../types';
 
 interface ProductFormProps {
   onSubmit: (formData: { name: string; price: number; description?: string; category?: Category; color: string; sku: string; totalStock: number; totalSelled: number }) => Promise<void>;
@@ -60,10 +60,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, product }) => {
         <label>Categoria</label>
         <select value={category} onChange={(e) => setCategory(e.target.value as Category)}>
           <option value="">Selecione uma categoria</option>
-          <option value="CD">CD</option>
-          <option value="Vinyl">Vinyl</option>
-          <option value="T_shirt">T-shirt</option>
-          <option value="Longsleeves">Longsleeves</option>
+          <option value={Category.CD}>CD</option>
+          <option value={Category.Vinyl}>Vinyl</option>
+          <option value={Category.Tshirt}>T-shirt</option>
+          <option value={Category.Longsleeves}>Longsleeves</option>
         </select>
       </div>
       <div>
