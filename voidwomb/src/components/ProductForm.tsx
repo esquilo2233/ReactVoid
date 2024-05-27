@@ -1,94 +1,88 @@
+// src/components/ProductForm.tsx
 import React, { useState } from 'react';
-import { addProduct } from '../services/productService';
+import { Category } from '@prisma/client';
 
-const ProductForm = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    sku: '',
-    price: 0,
-    color: '',
-    description: '',
-    totalStock: 0,
-    images: [{ imageUrl: '' }],
-    sizes: [{ size: '', stock: 0 }],
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+interface ProductFormProps {
+  onSubmit: (formData: { name: string; price: number; description?: string; category?: Category; color: string; sku: string; totalStock: number; totalSelled: number }) => Promise<void>;
+  product: {
+    id: number;
+    name: string;
+    price: number;
+    description: string;
+    category?: Category;
+    color: string;
+    sku: string;
+    totalStock: number;
+    totalSelled: number;
   };
+}
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const newImages = formData.images.map((image, i) => 
-      i === index ? { ...image, imageUrl: e.target.value } : image
-    );
-    setFormData({ ...formData, images: newImages });
-  };
+const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, product }) => {
+  const [name, setName] = useState(product.name);
+  const [price, setPrice] = useState(product.price);
+  const [description, setDescription] = useState(product.description);
+  const [category, setCategory] = useState(product.category || '');
+  const [color, setColor] = useState(product.color);
+  const [sku, setSku] = useState(product.sku);
+  const [totalStock, setTotalStock] = useState(product.totalStock);
+  const [totalSelled, setTotalSelled] = useState(product.totalSelled);
 
-  const handleSizeChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const newSizes = formData.sizes.map((size, i) =>
-      i === index ? { ...size, [e.target.name]: e.target.value } : size
-    );
-    setFormData({ ...formData, sizes: newSizes });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const { images, sizes, ...product } = formData;
-      const addedProduct = await addProduct(product, images, sizes);
-      console.log('Product added:', addedProduct);
-      // Lógica para redirecionar ou notificar o usuário sobre o sucesso
-    } catch (error) {
-      console.error('Error adding product:', error);
-      // Lógica para notificar o usuário sobre o erro
-    }
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const formData = {
+      name,
+      price,
+      description,
+      category: category ? category as Category : undefined,
+      color,
+      sku,
+      totalStock,
+      totalSelled
+    };
+    await onSubmit(formData);
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <label htmlFor="name">Name</label>
-        <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required />
+        <label>Nome</label>
+        <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
       </div>
       <div>
-        <label htmlFor="sku">SKU</label>
-        <input type="text" id="sku" name="sku" value={formData.sku} onChange={handleChange} required />
+        <label>Preço</label>
+        <input type="number" value={price} onChange={(e) => setPrice(Number(e.target.value))} />
       </div>
       <div>
-        <label htmlFor="price">Price</label>
-        <input type="number" id="price" name="price" value={formData.price} onChange={handleChange} required />
+        <label>Descrição</label>
+        <textarea value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
       </div>
       <div>
-        <label htmlFor="color">Color</label>
-        <input type="text" id="color" name="color" value={formData.color} onChange={handleChange} required />
+        <label>Categoria</label>
+        <select value={category} onChange={(e) => setCategory(e.target.value as Category)}>
+          <option value="">Selecione uma categoria</option>
+          <option value="CD">CD</option>
+          <option value="Vinyl">Vinyl</option>
+          <option value="T_shirt">T-shirt</option>
+          <option value="Longsleeves">Longsleeves</option>
+        </select>
       </div>
       <div>
-        <label htmlFor="description">Description</label>
-        <textarea id="description" name="description" value={formData.description} onChange={handleChange} required />
+        <label>Cor</label>
+        <input type="text" value={color} onChange={(e) => setColor(e.target.value)} />
       </div>
       <div>
-        <label htmlFor="totalStock">Total Stock</label>
-        <input type="number" id="totalStock" name="totalStock" value={formData.totalStock} onChange={handleChange} required />
+        <label>SKU</label>
+        <input type="text" value={sku} onChange={(e) => setSku(e.target.value)} />
       </div>
-      {formData.images.map((image, index) => (
-        <div key={index}>
-          <label htmlFor={`image-${index}`}>Image URL</label>
-          <input type="text" id={`image-${index}`} value={image.imageUrl} onChange={(e) => handleImageChange(e, index)} required />
-        </div>
-      ))}
-      {formData.sizes.map((size, index) => (
-        <div key={index}>
-          <label htmlFor={`size-${index}`}>Size</label>
-          <input type="text" id={`size-${index}`} name="size" value={size.size} onChange={(e) => handleSizeChange(e, index)} required />
-          <label htmlFor={`stock-${index}`}>Stock</label>
-          <input type="number" id={`stock-${index}`} name="stock" value={size.stock} onChange={(e) => handleSizeChange(e, index)} required />
-        </div>
-      ))}
-      <button type="submit">Add Product</button>
+      <div>
+        <label>Estoque Total</label>
+        <input type="number" value={totalStock} onChange={(e) => setTotalStock(Number(e.target.value))} />
+      </div>
+      <div>
+        <label>Total Vendido</label>
+        <input type="number" value={totalSelled} onChange={(e) => setTotalSelled(Number(e.target.value))} />
+      </div>
+      <button type="submit">Salvar</button>
     </form>
   );
 };
