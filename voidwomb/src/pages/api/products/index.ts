@@ -1,20 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../../utils/prisma';
 import { authenticate } from '../Auth/authMiddleware';
-import { errorHandler } from '../../../utils/errorHandler';
-import Joi from 'joi';
-
-const productSchema = Joi.object({
-  name: Joi.string().required(),
-  sku: Joi.string().required(),
-  price: Joi.number().required(),
-  color: Joi.string().required(),
-  category: Joi.string().required(),
-  totalStock: Joi.number().required(),
-  totalSelled: Joi.number().required(),
-  description: Joi.string().required(),
-  userId: Joi.number().required(),
-});
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -25,24 +11,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     });
 
-    if (req.method === 'GET') {
-      const products = await prisma.product.findMany();
-      res.json(products);
-    } else if (req.method === 'POST') {
-      const { error } = productSchema.validate(req.body);
-      if (error) {
-        return res.status(400).json({ error: 'Validation error', details: error.details });
-      }
+    const { id } = req.query;
 
+    if (req.method === 'GET') {
+      try {
+        const products = await prisma.product.findMany();
+        res.json(products);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        res.status(500).json({ error: 'An error occurred while fetching products.', details: (error as Error).message });
+      }
+    } else if (req.method === 'POST') {
       const { name, sku, price, color, category, totalStock, totalSelled, description, userId } = req.body;
-      const newProduct = await prisma.product.create({
-        data: { name, sku, price, color, category, totalStock, totalSelled, description, userId },
-      });
-      res.status(201).json(newProduct);
+      try {
+        const newProduct = await prisma.product.create({
+          data: { name, sku, price, color, category, totalStock, totalSelled, description, userId },
+        });
+        res.status(201).json(newProduct);
+      } catch (error) {
+        console.error("Error creating product:", error);
+        res.status(500).json({ error: 'An error occurred while creating the product.', details: (error as Error).message });
+      }
     } else {
       res.status(405).json({ error: 'Method not allowed' });
     }
-  } catch (err) {
-    errorHandler(err as Error, req, res);
+  } catch (error) {
+    console.error("Authentication or other error:", error);
+    res.status(500).json({ error: 'An error occurred during request processing.', details: (error as Error).message });
   }
 }
