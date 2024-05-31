@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession, getSession } from 'next-auth/react';
 import axios from 'axios';
-import withAuth from '../../../components/withAuth';
 
 const categories = ['CD', 'Vinyl', 'T_shirt', 'Longsleeves'];
 
@@ -25,17 +24,28 @@ const AddProduct = () => {
     }
 
     try {
-      const response = await axios.post('/api/products', {
-        name,
-        sku,
-        price,
-        color,
-        category,
-        totalStock,
-        totalSelled,
-        description,
-        userId: session.user.id,
-      });
+      const session = await getSession();
+      const token = session?.user?.id;
+
+      const response = await axios.post(
+        '/api/products',
+        {
+          name,
+          sku,
+          price,
+          color,
+          category,
+          totalStock,
+          totalSelled,
+          description,
+          userId: session?.user.id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.status === 201) {
         setMessage('Produto adicionado com sucesso!');
@@ -202,4 +212,4 @@ const AddProduct = () => {
   );
 };
 
-export default withAuth(AddProduct);
+export default AddProduct;
