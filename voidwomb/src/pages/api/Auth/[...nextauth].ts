@@ -35,16 +35,11 @@ const checkOrigin = (req: NextApiRequest): boolean => {
   const origin = req.headers.origin;
   const referer = req.headers.referer;
   const allowed = allowedOrigins.some((allowedOrigin) => referer?.startsWith(allowedOrigin) || origin === allowedOrigin);
-  console.log('Origin:', origin);
-  console.log('Referer:', referer);
-  console.log('Allowed Origins:', allowedOrigins);
-  console.log('Is Allowed:', allowed);
   return allowed;
 };
 
 const authHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!checkOrigin(req)) {
-    console.log('Forbidden Request:', req.headers);
     res.status(403).json({ error: 'Forbidden' });
     return;
   }
