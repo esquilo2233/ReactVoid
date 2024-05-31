@@ -4,6 +4,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import prisma from '../../../utils/prisma';
 import { compare } from 'bcryptjs';
+import jwt from 'jsonwebtoken'; // Adicionar importação
 
 declare module 'next-auth' {
   interface Session {
@@ -11,6 +12,7 @@ declare module 'next-auth' {
       id: string;
       email: string;
       is_staff: boolean;
+      accessToken?: string;
     };
   }
 
@@ -18,6 +20,7 @@ declare module 'next-auth' {
     id: string;
     email: string;
     is_staff: boolean;
+    accessToken?: string;
   }
 }
 
@@ -26,6 +29,7 @@ declare module 'next-auth/jwt' {
     id: string;
     email: string;
     is_staff: boolean;
+    accessToken?: string;
   }
 }
 
@@ -34,8 +38,7 @@ const allowedOrigins = ['https://voidwomb.com', 'https://dev.voidwomb.com', 'htt
 const checkOrigin = (req: NextApiRequest): boolean => {
   const origin = req.headers.origin;
   const referer = req.headers.referer;
-  const allowed = allowedOrigins.some((allowedOrigin) => referer?.startsWith(allowedOrigin) || origin === allowedOrigin);
-  return allowed;
+  return allowedOrigins.some((allowedOrigin) => referer?.startsWith(allowedOrigin) || origin === allowedOrigin);
 };
 
 const authHandler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -70,7 +73,15 @@ const authHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             throw new Error('Password is incorrect');
           }
 
-          return { id: user.id.toString(), email: user.email, is_staff: user.is_staff } as any;
+          // Gerar um token de exemplo aqui. Idealmente, você deve gerar um token real.
+          const accessToken = jwt.sign(
+            { id: user.id, email: user.email, is_staff: user.is_staff },
+            process.env.NEXTAUTH_SECRET || 'supersecret',
+            { expiresIn: '1h' }
+          );
+
+          // Retorne o user com a propriedade accessToken
+          return { id: user.id.toString(), email: user.email, is_staff: user.is_staff, accessToken };
         },
       }),
     ],
@@ -85,6 +96,7 @@ const authHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           session.user.id = token.id;
           session.user.email = token.email;
           session.user.is_staff = token.is_staff;
+          session.user.accessToken = token.accessToken; // Inclua accessToken aqui
         }
         return session;
       },
@@ -93,6 +105,7 @@ const authHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           token.id = user.id;
           token.email = user.email;
           token.is_staff = user.is_staff;
+          token.accessToken = user.accessToken; // Inclua accessToken aqui
         }
         return token;
       },

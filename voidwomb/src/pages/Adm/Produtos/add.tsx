@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useSession, getSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import axios from 'axios';
 
 const categories = ['CD', 'Vinyl', 'T_shirt', 'Longsleeves'];
@@ -24,8 +24,6 @@ const AddProduct = () => {
     }
 
     try {
-      const token = await getSession().then(session => session?.user.id);
-
       const response = await axios.post(
         '/api/products',
         {
@@ -41,7 +39,7 @@ const AddProduct = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${session.user.accessToken}`, // Use accessToken aqui
           },
         }
       );
@@ -176,7 +174,7 @@ const AddProduct = () => {
                 name="totalSelled"
                 type="number"
                 required
-                className="relative block w-full px-3 py-2 border border-gray-300 rounded-b-md focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                className="relative block w-full px-3 py-2 border border-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 placeholder="Total Vendido"
                 value={totalSelled}
                 onChange={(e) => setTotalSelled(Number(e.target.value))}
