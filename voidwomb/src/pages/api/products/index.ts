@@ -1,9 +1,7 @@
-// pages/api/products/index.ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../../utils/prisma';
 import { authenticate } from '../Auth/authMiddleware';
 import { errorHandler } from '../../../utils/errorHandler';
-import cors, { runMiddleware } from '../../../utils/cors';
 import Joi from 'joi';
 
 const productSchema = Joi.object({
@@ -19,8 +17,6 @@ const productSchema = Joi.object({
 });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  await runMiddleware(req, res, cors);
-
   try {
     await new Promise<void>((resolve, reject) => {
       authenticate(req, res, (err: Error) => {
@@ -47,6 +43,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(405).json({ error: 'Method not allowed' });
     }
   } catch (err) {
-    errorHandler(err, req, res);
+    errorHandler(err as Error, req, res); // Forçar o tipo de `err` para `Error`
   }
 }

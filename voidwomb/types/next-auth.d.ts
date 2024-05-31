@@ -1,15 +1,6 @@
-import NextAuth from 'next-auth';
-
-interface CustomRequest extends NextRequest {
-  user?: {
-    userId: number;
-    email: string;
-  };
-}
-
-declare module 'next/server' {
-  interface NextRequest extends CustomRequest {}
-}
+import 'next-auth';
+import 'next-auth/jwt';
+import { JWT as DefaultJWT } from 'next-auth/jwt';
 
 declare module 'next-auth' {
   interface Session {
@@ -30,7 +21,7 @@ declare module 'next-auth' {
 }
 
 declare module 'next-auth/jwt' {
-  interface JWT {
+  interface JWT extends DefaultJWT {
     id: string;
     email: string;
     is_staff: boolean;
