@@ -80,6 +80,8 @@ const authHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             { expiresIn: '1h' }
           );
 
+          console.log("Generated accessToken: ", accessToken);
+
           // Retorne o user com a propriedade accessToken
           return { id: user.id.toString(), email: user.email, is_staff: user.is_staff, accessToken };
         },
@@ -97,6 +99,7 @@ const authHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           session.user.email = token.email;
           session.user.is_staff = token.is_staff;
           session.user.accessToken = token.accessToken; // Inclua accessToken aqui
+          console.log("Session accessToken: ", session.user.accessToken);
         }
         return session;
       },
@@ -106,6 +109,7 @@ const authHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           token.email = user.email;
           token.is_staff = user.is_staff;
           token.accessToken = user.accessToken; // Inclua accessToken aqui
+          console.log("JWT token: ", token);
         }
         return token;
       },

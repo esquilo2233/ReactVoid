@@ -23,13 +23,15 @@ const AddProduct = () => {
       return;
     }
 
-    try {
-      const accessToken = session.user?.accessToken;
-      if (!accessToken) {
-        setMessage('Token de acesso não encontrado.');
-        return;
-      }
+    const accessToken = session.user?.accessToken;
+    if (!accessToken) {
+      setMessage('Token de acesso não encontrado.');
+      return;
+    }
 
+    console.log("Sending accessToken: ", accessToken);
+
+    try {
       const response = await axios.post(
         '/api/products',
         {
