@@ -4,7 +4,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import prisma from '../../../utils/prisma';
 import { compare } from 'bcryptjs';
-import jwt from 'jsonwebtoken'; // Adicionar importação
+import jwt from 'jsonwebtoken';
 
 declare module 'next-auth' {
   interface Session {
