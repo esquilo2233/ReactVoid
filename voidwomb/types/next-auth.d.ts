@@ -1,5 +1,4 @@
-import 'next-auth';
-import 'next-auth/jwt';
+import NextAuth, { DefaultSession, DefaultUser } from 'next-auth';
 import { JWT as DefaultJWT } from 'next-auth/jwt';
 
 declare module 'next-auth' {
@@ -8,15 +7,14 @@ declare module 'next-auth' {
       id: string;
       email: string;
       is_staff: boolean;
-      name?: string | null;
-      image?: string | null;
-    };
+      accessToken?: string; // Inclua accessToken aqui
+    } & DefaultSession['user'];
   }
 
-  interface User {
+  interface User extends DefaultUser {
     id: string;
-    email: string;
     is_staff: boolean;
+    accessToken?: string; // Inclua accessToken aqui
   }
 }
 
@@ -25,5 +23,6 @@ declare module 'next-auth/jwt' {
     id: string;
     email: string;
     is_staff: boolean;
+    accessToken?: string; // Inclua accessToken aqui
   }
 }

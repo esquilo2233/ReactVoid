@@ -43,6 +43,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(405).json({ error: 'Method not allowed' });
     }
   } catch (err) {
-    errorHandler(err as Error, req, res); // Forçar o tipo de `err` para `Error`
+    errorHandler(err as Error, req, res);
   }
 }
