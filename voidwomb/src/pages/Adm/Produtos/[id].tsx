@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import ProductForm from '../../../components/ProductForm';
 import { Category } from '../../../types';
-
+import withAuth from '../../../components/withAuth';
 interface Product {
   id: number;
   name: string;
@@ -57,4 +57,4 @@ const EditProduct = () => {
   );
 };
 
-export default EditProduct;
+export default withAuth(EditProduct);

@@ -1,6 +1,6 @@
 // pages/admin/index.tsx
 import Link from 'next/link';
-//import withAuth from '../../../components/withAuth';
+import withAuth from '../../../components/withAuth';
 
 const AdminPage: React.FC = () => {
   return (
@@ -37,4 +37,4 @@ const AdminPage: React.FC = () => {
   );
 };
 
-export default AdminPage;
+export default withAuth(AdminPage);

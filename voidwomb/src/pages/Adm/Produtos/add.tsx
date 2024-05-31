@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { addProduct } from '../../../services/productService';
-
+import withAuth from '../../../components/withAuth';
 const AddProductForm = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -92,4 +92,4 @@ const AddProductForm = () => {
   );
 };
 
-export default AddProductForm;
+export default withAuth(AddProductForm);
