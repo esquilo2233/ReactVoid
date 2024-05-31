@@ -24,6 +24,12 @@ const AddProduct = () => {
     }
 
     try {
+      const accessToken = session.user?.accessToken;
+      if (!accessToken) {
+        setMessage('Token de acesso não encontrado.');
+        return;
+      }
+
       const response = await axios.post(
         '/api/products',
         {
@@ -39,7 +45,7 @@ const AddProduct = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${session.user.accessToken}`, // Use accessToken aqui
+            Authorization: `Bearer ${accessToken}`, // Use accessToken aqui
           },
         }
       );
