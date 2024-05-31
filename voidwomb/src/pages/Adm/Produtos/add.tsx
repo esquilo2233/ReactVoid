@@ -1,95 +1,205 @@
-import React, { useState } from 'react';
-import { addProduct } from '../../../services/productService';
+import { useState } from 'react';
+import { useSession } from 'next-auth/react';
+import axios from 'axios';
 import withAuth from '../../../components/withAuth';
-const AddProductForm = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    sku: '',
-    price: 0,
-    color: '',
-    description: '',
-    totalStock: 0,
-    images: [{ imageUrl: '' }],
-    sizes: [{ size: '', stock: 0 }],
-  });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+const categories = ['CD', 'Vinyl', 'T_shirt', 'Longsleeves'];
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const newImages = formData.images.map((image, i) => 
-      i === index ? { ...image, imageUrl: e.target.value } : image
-    );
-    setFormData({ ...formData, images: newImages });
-  };
+const AddProduct = () => {
+  const { data: session } = useSession();
+  const [name, setName] = useState('');
+  const [sku, setSku] = useState('');
+  const [price, setPrice] = useState(0);
+  const [color, setColor] = useState('');
+  const [category, setCategory] = useState(categories[0]);
+  const [totalStock, setTotalStock] = useState(0);
+  const [totalSelled, setTotalSelled] = useState(0);
+  const [description, setDescription] = useState('');
+  const [message, setMessage] = useState('');
 
-  const handleSizeChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const newSizes = formData.sizes.map((size, i) =>
-      i === index ? { ...size, [e.target.name]: e.target.value } : size
-    );
-    setFormData({ ...formData, sizes: newSizes });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!session) {
+      setMessage('Você precisa estar logado para adicionar um produto.');
+      return;
+    }
+
     try {
-      const addedProduct = await addProduct(formData, formData.images, formData.sizes);
-      console.log('Product added:', addedProduct);
-      // Lógica para redirecionar ou notificar o usuário sobre o sucesso
+      const response = await axios.post('/api/products', {
+        name,
+        sku,
+        price,
+        color,
+        category,
+        totalStock,
+        totalSelled,
+        description,
+        userId: session.user.id,
+      });
+
+      if (response.status === 201) {
+        setMessage('Produto adicionado com sucesso!');
+        // Limpar campos do formulário
+        setName('');
+        setSku('');
+        setPrice(0);
+        setColor('');
+        setCategory(categories[0]);
+        setTotalStock(0);
+        setTotalSelled(0);
+        setDescription('');
+      } else {
+        setMessage('Erro ao adicionar produto.');
+      }
     } catch (error) {
-      console.error('Error adding product:', error);
-      // Lógica para notificar o usuário sobre o erro
+      console.error(error);
+      setMessage('Erro ao adicionar produto.');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="name">Name</label>
-        <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required />
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded shadow-md">
+        <h2 className="text-2xl font-bold text-center">Adicionar Produto</h2>
+        {message && <div className="text-red-500 text-center">{message}</div>}
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="rounded-md shadow-sm -space-y-px">
+            <div>
+              <label htmlFor="name" className="sr-only">
+                Nome do Produto
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                required
+                className="relative block w-full px-3 py-2 border border-gray-300 rounded-t-md focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                placeholder="Nome do Produto"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="sku" className="sr-only">
+                SKU
+              </label>
+              <input
+                id="sku"
+                name="sku"
+                type="text"
+                required
+                className="relative block w-full px-3 py-2 border border-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                placeholder="SKU"
+                value={sku}
+                onChange={(e) => setSku(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="price" className="sr-only">
+                Preço
+              </label>
+              <input
+                id="price"
+                name="price"
+                type="number"
+                required
+                className="relative block w-full px-3 py-2 border border-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                placeholder="Preço"
+                value={price}
+                onChange={(e) => setPrice(Number(e.target.value))}
+              />
+            </div>
+            <div>
+              <label htmlFor="color" className="sr-only">
+                Cor
+              </label>
+              <input
+                id="color"
+                name="color"
+                type="text"
+                required
+                className="relative block w-full px-3 py-2 border border-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                placeholder="Cor"
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="category" className="sr-only">
+                Categoria
+              </label>
+              <select
+                id="category"
+                name="category"
+                required
+                className="relative block w-full px-3 py-2 border border-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="totalStock" className="sr-only">
+                Estoque Total
+              </label>
+              <input
+                id="totalStock"
+                name="totalStock"
+                type="number"
+                required
+                className="relative block w-full px-3 py-2 border border-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                placeholder="Estoque Total"
+                value={totalStock}
+                onChange={(e) => setTotalStock(Number(e.target.value))}
+              />
+            </div>
+            <div>
+              <label htmlFor="totalSelled" className="sr-only">
+                Total Vendido
+              </label>
+              <input
+                id="totalSelled"
+                name="totalSelled"
+                type="number"
+                required
+                className="relative block w-full px-3 py-2 border border-gray-300 rounded-b-md focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                placeholder="Total Vendido"
+                value={totalSelled}
+                onChange={(e) => setTotalSelled(Number(e.target.value))}
+              />
+            </div>
+            <div>
+              <label htmlFor="description" className="sr-only">
+                Descrição
+              </label>
+              <textarea
+                id="description"
+                name="description"
+                required
+                className="relative block w-full px-3 py-2 border border-gray-300 rounded-b-md focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                placeholder="Descrição"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </div>
+          </div>
+          <div>
+            <button
+              type="submit"
+              className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              Adicionar Produto
+            </button>
+          </div>
+        </form>
       </div>
-      <div>
-        <label htmlFor="sku">SKU</label>
-        <input type="text" id="sku" name="sku" value={formData.sku} onChange={handleChange} required />
-      </div>
-      <div>
-        <label htmlFor="price">Price</label>
-        <input type="number" id="price" name="price" value={formData.price} onChange={handleChange} required />
-      </div>
-      <div>
-        <label htmlFor="color">Color</label>
-        <input type="text" id="color" name="color" value={formData.color} onChange={handleChange} required />
-      </div>
-      <div>
-        <label htmlFor="description">Description</label>
-        <textarea id="description" name="description" value={formData.description} onChange={handleChange} required />
-      </div>
-      <div>
-        <label htmlFor="totalStock">Total Stock</label>
-        <input type="number" id="totalStock" name="totalStock" value={formData.totalStock} onChange={handleChange} required />
-      </div>
-      {formData.images.map((image, index) => (
-        <div key={index}>
-          <label htmlFor={`image-${index}`}>Image URL</label>
-          <input type="text" id={`image-${index}`} value={image.imageUrl} onChange={(e) => handleImageChange(e, index)} required />
-        </div>
-      ))}
-      {formData.sizes.map((size, index) => (
-        <div key={index}>
-          <label htmlFor={`size-${index}`}>Size</label>
-          <input type="text" id={`size-${index}`} name="size" value={size.size} onChange={(e) => handleSizeChange(e, index)} required />
-          <label htmlFor={`stock-${index}`}>Stock</label>
-          <input type="number" id={`stock-${index}`} name="stock" value={size.stock} onChange={(e) => handleSizeChange(e, index)} required />
-        </div>
-      ))}
-      <button type="submit">Add Product</button>
-    </form>
+    </div>
   );
 };
 
-export default withAuth(AddProductForm);
+export default withAuth(AddProduct);
