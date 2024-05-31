@@ -24,8 +24,7 @@ const AddProduct = () => {
     }
 
     try {
-      const session = await getSession();
-      const token = session?.user?.id;
+      const token = await getSession().then(session => session?.user.id);
 
       const response = await axios.post(
         '/api/products',
@@ -38,7 +37,7 @@ const AddProduct = () => {
           totalStock,
           totalSelled,
           description,
-          userId: session?.user.id,
+          userId: session.user.id,
         },
         {
           headers: {
