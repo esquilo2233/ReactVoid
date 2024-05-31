@@ -1,4 +1,3 @@
-// pages/api/auth/[...nextauth].ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
@@ -9,19 +8,24 @@ import { compare } from 'bcryptjs';
 declare module 'next-auth' {
   interface Session {
     user: {
-      id: number;
+      id: string;
       email: string;
       is_staff: boolean;
     };
   }
 
   interface User {
-    id: number;
+    id: string;
     email: string;
-    password: string;
     is_staff: boolean;
-    created_at: Date;
-    last_login: Date | null;
+  }
+}
+
+declare module 'next-auth/jwt' {
+  interface JWT {
+    id: string;
+    email: string;
+    is_staff: boolean;
   }
 }
 
@@ -71,8 +75,7 @@ const authHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             throw new Error('Password is incorrect');
           }
 
-          const { password, ...userWithoutPassword } = user;
-          return userWithoutPassword as any;
+          return { id: user.id.toString(), email: user.email, is_staff: user.is_staff } as any;
         },
       }),
     ],
@@ -84,9 +87,9 @@ const authHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     callbacks: {
       async session({ session, token }) {
         if (token && session.user) {
-          session.user.id = token.id as number;
-          session.user.email = token.email as string;
-          session.user.is_staff = token.is_staff as boolean;
+          session.user.id = token.id;
+          session.user.email = token.email;
+          session.user.is_staff = token.is_staff;
         }
         return session;
       },

@@ -1,5 +1,4 @@
-// types/next-auth.d.ts
-import NextAuth from 'next-auth'
+import NextAuth from 'next-auth';
 
 interface CustomRequest extends NextRequest {
   user?: {
@@ -11,17 +10,29 @@ interface CustomRequest extends NextRequest {
 declare module 'next/server' {
   interface NextRequest extends CustomRequest {}
 }
+
 declare module 'next-auth' {
   interface Session {
     user: {
-      id: string
-      name?: string | null
-      email?: string | null
-      image?: string | null
-    }
+      id: string;
+      email: string;
+      is_staff: boolean;
+      name?: string | null;
+      image?: string | null;
+    };
   }
 
   interface User {
-    id: string
+    id: string;
+    email: string;
+    is_staff: boolean;
+  }
+}
+
+declare module 'next-auth/jwt' {
+  interface JWT {
+    id: string;
+    email: string;
+    is_staff: boolean;
   }
 }
