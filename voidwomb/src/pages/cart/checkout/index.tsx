@@ -1,6 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+const DynamicPayPalButton = dynamic(() => import('../../../components/PaypalButtons'), { ssr: false });
+
+
+
+
 
 function Cart() {
+
+  const [shouldRenderPayPal, setShouldRenderPayPal] = useState(false);
+  
+  useEffect(() => {
+    setShouldRenderPayPal(true);
+  }, []);
+  
   return (
     <div>
       <style jsx>{`
@@ -170,7 +183,7 @@ function Cart() {
                   </div>
                 </div>
                 <div className="space-y-3">
-                  <button type="submit" className="mt-8 flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-3 text-lg font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 border">Proceed to Payment</button>
+                  {shouldRenderPayPal && <DynamicPayPalButton />}
                 </div>
               </div>
             </div>
