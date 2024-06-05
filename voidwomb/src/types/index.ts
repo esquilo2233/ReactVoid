@@ -6,4 +6,10 @@ export enum Category {
     Tshirt = 'T_shirt',
     Longsleeves = 'Longsleeves',
   }
+export interface Product {
+  id: number;
+  name: string;
+  price: number;
+}
+
   

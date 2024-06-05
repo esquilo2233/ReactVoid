@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import withAuth from '../../../components/withAuth';
+import addProduct  from '../../../actions/addproduct';
 
 const categories = ['CD', 'Vinyl', 'T_shirt', 'Longsleeves'];
 
@@ -10,7 +11,7 @@ const AddProduct = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded shadow-md">
         <h2 className="text-2xl font-bold text-center">Adicionar Produto</h2>
-        <form className="mt-8 space-y-6" action={'addProduct'}>
+        <form className="mt-8 space-y-6" action={addProduct}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <label htmlFor="name" className="sr-only">

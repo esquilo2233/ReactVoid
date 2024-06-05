@@ -7,14 +7,14 @@ declare module 'next-auth' {
       id: string;
       email: string;
       is_staff: boolean;
-      accessToken?: string; // Inclua accessToken aqui
+      accessToken?: string; 
     } & DefaultSession['user'];
   }
 
   interface User extends DefaultUser {
     id: string;
     is_staff: boolean;
-    accessToken?: string; // Inclua accessToken aqui
+    accessToken?: string; 
   }
 }
 
@@ -23,6 +23,7 @@ declare module 'next-auth/jwt' {
     id: string;
     email: string;
     is_staff: boolean;
-    accessToken?: string; // Inclua accessToken aqui
+    accessToken?: string; 
   }
+
 }
