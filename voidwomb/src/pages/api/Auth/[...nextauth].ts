@@ -33,7 +33,7 @@ declare module 'next-auth/jwt' {
   }
 }
 
-const allowedOrigins = ['https://voidwomb.com', 'https://dev.voidwomb.com', 'https://qa.voidwomb.com'];
+const allowedOrigins = ['https://voidwomb.com', 'https://dev.voidwomb.com', 'https://qa.voidwomb.com','http://localhost:3000'];
 
 const checkOrigin = (req: NextApiRequest): boolean => {
   const origin = req.headers.origin;
