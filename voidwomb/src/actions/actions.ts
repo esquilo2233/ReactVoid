@@ -2,27 +2,16 @@
 import { supabase } from '../utils/supabaseClient';
 import { Product } from '../types';
 
-export const addProduct = async (product: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>): Promise<void> => {
-  const { error } = await supabase
-    .from('products')
-    .insert([
-      {
-        name: product.name,
-        sku: product.sku,
-        price: product.price,
-        color: product.color,
-        category: product.category,
-        totalStock: product.totalStock,
-        totalSelled: product.totalSelled,
-        description: product.description,
-        userId: product.userId,
-      },
-    ]);
+export const addProduct = async (product: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const { data, error } = await supabase
+    .from('Product')
+    .insert([product]);
 
   if (error) {
-    console.error('Erro ao adicionar produto:', error);
+    console.log(error)
+    console.log(error.message)
     throw new Error(error.message);
   }
 
-  console.log('Produto adicionado com sucesso');
+  return data;
 };
