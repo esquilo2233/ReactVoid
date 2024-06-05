@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
+import withAuth from '../../../components/withAuth';
 
 const categories = ['CD', 'Vinyl', 'T_shirt', 'Longsleeves'];
 
@@ -217,4 +218,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default withAuth(AddProduct);
