@@ -26,6 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     } else if (req.method === 'POST') {
       const { name, sku, price, color, category, totalStock, totalSelled, description, userId } = req.body;
       try {
+        console.log("Creating product with data:", { name, sku, price, color, category, totalStock, totalSelled, description, userId });
         const newProduct = await prisma.product.create({
           data: { name, sku, price, color, category, totalStock, totalSelled, description, userId },
         });

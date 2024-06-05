@@ -24,7 +24,7 @@ const AddProduct = () => {
       return;
     }
 
-    const accessToken = session.user?.accessToken;
+    const accessToken = session?.user?.accessToken;
     if (!accessToken) {
       setMessage('Token de acesso não encontrado.');
       return;
