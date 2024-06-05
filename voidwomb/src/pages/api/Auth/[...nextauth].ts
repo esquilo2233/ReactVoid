@@ -1,27 +1,35 @@
-// pages/api/auth/[...nextauth].ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import prisma from '../../../utils/prisma';
 import { compare } from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 declare module 'next-auth' {
   interface Session {
     user: {
-      id: number;
+      id: string;
       email: string;
       is_staff: boolean;
+      accessToken?: string;
     };
   }
 
   interface User {
-    id: number;
+    id: string;
     email: string;
-    password: string;
     is_staff: boolean;
-    created_at: Date;
-    last_login: Date | null;
+    accessToken?: string;
+  }
+}
+
+declare module 'next-auth/jwt' {
+  interface JWT {
+    id: string;
+    email: string;
+    is_staff: boolean;
+    accessToken?: string;
   }
 }
 
@@ -30,17 +38,11 @@ const allowedOrigins = ['https://voidwomb.com', 'https://dev.voidwomb.com', 'htt
 const checkOrigin = (req: NextApiRequest): boolean => {
   const origin = req.headers.origin;
   const referer = req.headers.referer;
-  const allowed = allowedOrigins.some((allowedOrigin) => referer?.startsWith(allowedOrigin) || origin === allowedOrigin);
-  console.log('Origin:', origin);
-  console.log('Referer:', referer);
-  console.log('Allowed Origins:', allowedOrigins);
-  console.log('Is Allowed:', allowed);
-  return allowed;
+  return allowedOrigins.some((allowedOrigin) => referer?.startsWith(allowedOrigin) || origin === allowedOrigin);
 };
 
 const authHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!checkOrigin(req)) {
-    console.log('Forbidden Request:', req.headers);
     res.status(403).json({ error: 'Forbidden' });
     return;
   }
@@ -71,8 +73,17 @@ const authHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             throw new Error('Password is incorrect');
           }
 
-          const { password, ...userWithoutPassword } = user;
-          return userWithoutPassword as any;
+          // Gerar um token de exemplo aqui. Idealmente, você deve gerar um token real.
+          const accessToken = jwt.sign(
+            { id: user.id, email: user.email, is_staff: user.is_staff },
+            process.env.NEXTAUTH_SECRET || 'supersecret',
+            { expiresIn: '1h' }
+          );
+
+          console.log("Generated accessToken: ", accessToken);
+
+          // Retorne o user com a propriedade accessToken
+          return { id: user.id.toString(), email: user.email, is_staff: user.is_staff, accessToken };
         },
       }),
     ],
@@ -84,9 +95,11 @@ const authHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     callbacks: {
       async session({ session, token }) {
         if (token && session.user) {
-          session.user.id = token.id as number;
-          session.user.email = token.email as string;
-          session.user.is_staff = token.is_staff as boolean;
+          session.user.id = token.id;
+          session.user.email = token.email;
+          session.user.is_staff = token.is_staff;
+          session.user.accessToken = token.accessToken; // Inclua accessToken aqui
+          console.log("Session accessToken: ", session.user.accessToken);
         }
         return session;
       },
@@ -95,6 +108,8 @@ const authHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           token.id = user.id;
           token.email = user.email;
           token.is_staff = user.is_staff;
+          token.accessToken = user.accessToken; // Inclua accessToken aqui
+          console.log("JWT token: ", token);
         }
         return token;
       },

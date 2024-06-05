@@ -1,9 +1,20 @@
+// src/pages/Adm/Produtos/[id].tsx
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { getProductById, updateProduct, Product } from '../../../services/productService';
-import withAuth from '../../../components/withAuth';
 import ProductForm from '../../../components/ProductForm';
-
+import { Category } from '../../../types';
+import withAuth from '../../../components/withAuth';
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+  category?: Category;
+  color: string;
+  sku: string;
+  totalStock: number;
+  totalSelled: number;
+}
 
 const EditProduct = () => {
   const router = useRouter();
@@ -11,54 +22,32 @@ const EditProduct = () => {
   const [product, setProduct] = useState<Product | null>(null);
 
   useEffect(() => {
+    const fetchProduct = async () => {
+      const response = await fetch(`/api/products?id=${id}`);
+      const data = await response.json();
+      setProduct(data);
+    };
+
     if (id) {
-      getProductById(Number(id)).then(setProduct);
+      fetchProduct();
     }
   }, [id]);
 
-  const handleUpdateProduct = async (formData: FormData) => {
-    const productData = {
-      name: formData.get('name') as string,
-      sku: formData.get('sku') as string,
-      price: parseFloat(formData.get('price') as string),
-      totalStock: parseInt(formData.get('totalStock') as string),
-      description: formData.get('description') as string,
-      color: formData.get('color') as string,
-      totalSelled: parseInt(formData.get('totalSelled') as string),
-    };
-
-    const images = Array.from(formData.getAll('images')).map(image => ({
-      imageUrl: URL.createObjectURL(image as File),
-    }));
-
-    const sizes = Array.from(formData.getAll('sizes')).map(size =>
-      JSON.parse(size as string)
-    );
-
-    try {
-      const response = await fetch('/api/products', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: Number(id), ...productData, images, sizes }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Error updating product:', errorData);
-        return;
+  const handleUpdateProduct = async (formData: { name: string; price: number; description?: string; category?: Category; color: string; sku: string; totalStock: number; totalSelled: number }) => {
+    await fetch(`/api/products?id=${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(formData),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
       }
-
-      const data = await response.json();
-      console.log('Response:', data);
-      router.push('/adm/produtos');
-    } catch (error) {
-      console.error('Error updating product:', error);
-    }
+    });
+    router.push('/Adm/Produtos');
   };
 
-  if (!product) return <div>Loading...</div>;
+  if (!product) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
