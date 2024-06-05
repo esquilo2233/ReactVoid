@@ -6,12 +6,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     await new Promise<void>((resolve, reject) => {
       authenticate(req, res, (err: Error) => {
-        if (err) reject(err);
-        else resolve();
+        if (err) {
+          console.error("Authentication error:", err);
+          reject(err);
+        } else {
+          resolve();
+        }
       });
     });
-
-    const { id } = req.query;
 
     if (req.method === 'GET') {
       try {
@@ -36,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(405).json({ error: 'Method not allowed' });
     }
   } catch (error) {
-    console.error("Authentication or other error:", error);
+    console.error("Request processing error:", error);
     res.status(500).json({ error: 'An error occurred during request processing.', details: (error as Error).message });
   }
 }

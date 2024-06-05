@@ -67,7 +67,7 @@ const AddProduct = () => {
         setMessage('Erro ao adicionar produto.');
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error adding product:", error);
       setMessage('Erro ao adicionar produto.');
     }
   };
