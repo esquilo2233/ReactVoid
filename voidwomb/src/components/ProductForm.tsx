@@ -62,7 +62,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, product }) => {
           <option value="">Selecione uma categoria</option>
           <option value={Category.CD}>CD</option>
           <option value={Category.Vinyl}>Vinyl</option>
-          <option value={Category.Tshirt}>T-shirt</option>
+          <option value={Category.T_shirt}>T-shirt</option>
           <option value={Category.Longsleeves}>Longsleeves</option>
         </select>
       </div>

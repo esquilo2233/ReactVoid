@@ -120,11 +120,10 @@ const AddProduct: React.FC = () => {
             required
           >
             <option value="" disabled>Selecione uma categoria</option>
-            {Object.values(Category).map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
+            <option value={Category.CD}>CD</option>
+            <option value={Category.Vinyl}>Vinyl</option>
+            <option value={Category.T_shirt}>T-shirt</option> {/* Correção aqui */}
+            <option value={Category.Longsleeves}>Longsleeves</option>
           </select>
         </div>
         <div className="mb-4">
@@ -169,5 +168,6 @@ const AddProduct: React.FC = () => {
     </div>
   );
 };
+
 
 export default AddProduct;

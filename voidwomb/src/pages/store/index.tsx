@@ -1,6 +1,7 @@
 // pages/store/index.tsx
 import React from 'react';
 import Link from 'next/link';
+import Image from "next/image";
 import prisma from '../../utils/prisma';
 import { GetServerSideProps } from 'next';
 import { Product } from '../../types';
@@ -30,7 +31,7 @@ const Store: React.FC<StoreProps> = ({ products }) => {
           >
             <Link href={`/store/product/${product.id}`}>
               <div className="p-8">
-                <img
+                <Image
                   className="rounded-t-lg"
                   src="/path/to/default-image.jpg" // Placeholder image
                   alt={`${product.name} image`}
