@@ -10,6 +10,7 @@ interface ProductFormProps {
     totalStock: number;
     description: string;
     totalSelled?: number;
+    images: File[];
   }) => void;
   product?: {
     name: string;
@@ -31,6 +32,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, product }) => {
   const [category, setCategory] = useState(product?.category || '');
   const [totalStock, setTotalStock] = useState(product?.totalStock.toString() || '');
   const [description, setDescription] = useState(product?.description || '');
+  const [images, setImages] = useState<File[]>([]);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
@@ -57,6 +59,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, product }) => {
       totalStock: parseInt(totalStock, 10),
       description,
       totalSelled: product?.totalSelled || 0,
+      images
     };
 
     onSubmit(formData);
@@ -139,6 +142,16 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, product }) => {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           required
+          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        />
+      </div>
+      <div className="mb-4">
+        <label htmlFor="images" className="block text-sm font-medium text-gray-700">Images</label>
+        <input
+          id="images"
+          type="file"
+          multiple
+          onChange={(e) => setImages(Array.from(e.target.files || []))}
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
