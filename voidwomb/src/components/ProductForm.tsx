@@ -1,51 +1,70 @@
-import React, { useState } from 'react';
-import { supabase } from '../utils/supabaseClient';
+import React, { useState, useEffect } from 'react';
 
-const ProductForm = () => {
-  const [name, setName] = useState('');
-  const [sku, setSku] = useState('');
-  const [price, setPrice] = useState('');
-  const [color, setColor] = useState('');
-  const [category, setCategory] = useState('');
-  const [totalStock, setTotalStock] = useState('');
-  const [description, setDescription] = useState('');
+interface ProductFormProps {
+  onSubmit: (formData: {
+    name: string;
+    sku: string;
+    price: number;
+    color: string;
+    category: string;
+    totalStock: number;
+    description: string;
+    totalSelled?: number;
+  }) => void;
+  product?: {
+    name: string;
+    sku: string;
+    price: number;
+    color: string;
+    category: string;
+    totalStock: number;
+    description: string;
+    totalSelled?: number;
+  };
+}
+
+const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, product }) => {
+  const [name, setName] = useState(product?.name || '');
+  const [sku, setSku] = useState(product?.sku || '');
+  const [price, setPrice] = useState(product?.price.toString() || '');
+  const [color, setColor] = useState(product?.color || '');
+  const [category, setCategory] = useState(product?.category || '');
+  const [totalStock, setTotalStock] = useState(product?.totalStock.toString() || '');
+  const [description, setDescription] = useState(product?.description || '');
   const [message, setMessage] = useState('');
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  useEffect(() => {
+    if (product) {
+      setName(product.name);
+      setSku(product.sku);
+      setPrice(product.price.toString());
+      setColor(product.color);
+      setCategory(product.category);
+      setTotalStock(product.totalStock.toString());
+      setDescription(product.description);
+    }
+  }, [product]);
+
+  const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    
-    const productData = {
+
+    const formData = {
       name,
       sku,
       price: parseFloat(price),
       color,
       category,
       totalStock: parseInt(totalStock, 10),
-      totalSelled: 0,
       description,
+      totalSelled: product?.totalSelled || 0,
     };
 
-    const { data, error } = await supabase
-      .from('Product')
-      .insert([productData]);
-
-    if (error) {
-      setMessage(`Error: ${error.message}`);
-    } else {
-      setMessage('Product added successfully!');
-      setName('');
-      setSku('');
-      setPrice('');
-      setColor('');
-      setCategory('');
-      setTotalStock('');
-      setDescription('');
-    }
+    onSubmit(formData);
   };
 
   return (
     <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold text-center mb-4">Add Product</h2>
+      <h2 className="text-2xl font-bold text-center mb-4">{product ? 'Edit Product' : 'Add Product'}</h2>
       {message && <div className="mb-4 text-green-500">{message}</div>}
       <div className="mb-4">
         <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
@@ -124,7 +143,7 @@ const ProductForm = () => {
         />
       </div>
       <button type="submit" className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-        Add Product
+        {product ? 'Update Product' : 'Add Product'}
       </button>
     </form>
   );
