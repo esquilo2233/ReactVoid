@@ -38,8 +38,6 @@ const AddProductPage = () => {
 
       if (productError) {
         console.error('Error adding product:', productError);
-        console.error('Error details:', productError.details);
-        console.error('Error hint:', productError.hint);
         throw new Error(productError.message);
       }
 
