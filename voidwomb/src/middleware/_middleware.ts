@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 
-const allowedOrigins = ['https://voidwomb.com', 'https://dev.voidwomb.com', 'https://qa.voidwomb.com'];
+const allowedOrigins = ['https://voidwomb.com', 'https://dev.voidwomb.com', 'https://qa.voidwomb.com','localhost:3000'];
 
 interface CustomRequest extends NextRequest {
   user?: {
@@ -23,7 +23,7 @@ export function middleware(req: NextRequest) {
   }
 
   const token = authHeader.split(' ')[1];
-  const secret = process.env.JWT_SECRET;
+  const secret = process.env.NEXT_PUBLIC_SUPABASE_JWT_SECRET;
 
   if (!secret) {
     return new Response('JWT_SECRET não definido', { status: 500 });
