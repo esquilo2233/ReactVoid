@@ -2,8 +2,11 @@ import React from 'react';
 import ProductForm from '../../../components/ProductForm';
 import withAuth from '../../../components/withAuth';
 import { supabase } from '../../../utils/supabaseClient';
+import { useSession } from 'next-auth/react';
 
 const AddProductPage = () => {
+  const { data: session } = useSession();
+
   const handleAddProduct = async (formData: {
     name: string;
     sku: string;
@@ -14,18 +17,34 @@ const AddProductPage = () => {
     description: string;
     totalSelled?: number;
   }) => {
-    const { name, sku, price, color, category, totalStock, description, totalSelled = 0 } = formData;
+    try {
+      const { name, sku, price, color, category, totalStock, description, totalSelled = 0 } = formData;
+      const userId = session?.user.id;
 
-    const { data, error } = await supabase
-      .from('Product')
-      .insert([{ name, sku, price, color, category, totalStock, description, totalSelled }]);
+      if (!userId) {
+        throw new Error("User ID is not available");
+      }
 
-    if (error) {
-      console.error('Error adding product:', error);
-      return;
+      const { data, error } = await supabase
+        .from('Product')
+        .insert([{ name, sku, price, color, category, totalStock, description, totalSelled, user_id: userId }]);
+
+      if (error) {
+        console.error('Error adding product:', error);
+        console.error('Error details:', error.details);
+        console.error('Error hint:', error.hint);
+        throw new Error(error.message);
+      }
+
+      console.log('Product added successfully:', data);
+    } catch (error) {
+      console.error('Error:', error);
+      if (error instanceof Error) {
+        alert('Error adding product: ' + error.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
-
-    console.log('Product added successfully:', data);
   };
 
   return (
