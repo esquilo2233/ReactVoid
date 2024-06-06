@@ -27,6 +27,8 @@ const AddProductPage = () => {
         throw new Error("User ID is not available");
       }
 
+      console.log('Adding product:', { name, sku, price, color, category, totalStock, description, totalSelled, user_id: userId });
+
       // Adicionar produto
       const { data: productData, error: productError } = await supabaseService
         .from('Product')
@@ -41,11 +43,15 @@ const AddProductPage = () => {
         throw new Error(productError.message);
       }
 
+      console.log('Product added:', productData);
+
       const productId = productData.id;
 
       // Carregar imagens para o Supabase Storage e inserir URLs na tabela ProductImage
       for (const image of images) {
         const filePath = `public/${userId}/${Date.now()}_${image.name}`;
+        console.log('Uploading image to path:', filePath);
+
         const { data: imageData, error: imageError } = await supabase.storage
           .from('products')
           .upload(filePath, image, {
@@ -54,21 +60,28 @@ const AddProductPage = () => {
           });
 
         if (imageError) {
+          console.error('Error uploading image:', imageError);
           throw new Error(`Error uploading image: ${imageError.message}`);
         }
 
+        console.log('Image uploaded:', imageData);
+
         const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${filePath}`;
+        console.log('Image URL:', imageUrl);
 
         const { error: imageInsertError } = await supabaseService
           .from('ProductImage')
           .insert([{ productId, imageUrl }]);
 
         if (imageInsertError) {
+          console.error('Error inserting image URL:', imageInsertError);
           throw new Error(`Error inserting image URL: ${imageInsertError.message}`);
         }
+
+        console.log('Image URL inserted:', imageUrl);
       }
 
-      console.log('Product added successfully:', productData);
+      console.log('Product added successfully with images:', productData);
     } catch (error) {
       console.error('Error:', error);
       if (error instanceof Error) {
