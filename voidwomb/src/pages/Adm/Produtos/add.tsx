@@ -51,13 +51,15 @@ const AddProductPage = () => {
         const filePath = `public/${userId}/${Date.now()}_${image.name}`;
         console.log('Uploading image to path:', filePath);
 
+        const formData = new FormData();
+        formData.append('file', image);
+
         const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/products/${filePath}`, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': image.type,
+            'Authorization': `Bearer ${accessToken}`
           },
-          body: image
+          body: formData
         });
 
         if (!response.ok) {
