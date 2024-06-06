@@ -47,12 +47,10 @@ const AddProductPage = () => {
 
       // Carregar imagens para o Supabase Storage e inserir URLs na tabela ProductImage
       for (const image of images) {
-        const filePath = `public/${userId}/${Date.now()}_${image.name}`;
+        const filePath = `${userId}/${Date.now()}_${image.name}`;
         console.log('Uploading image to path:', filePath);
 
-        const { data: imageData, error: imageError } = await supabase.storage
-          .from('products')
-          .upload(filePath, image, {
+        const { data: imageData, error: imageError } = await supabase.storage.from('products').upload(filePath, image, {
             cacheControl: '3600',
             upsert: false
           });
@@ -67,9 +65,7 @@ const AddProductPage = () => {
         const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${filePath}`;
         console.log('Image URL:', imageUrl);
 
-        const { error: imageInsertError } = await supabaseService
-          .from('ProductImage')
-          .insert([{ productId, imageUrl }]);
+        const { error: imageInsertError } = await supabaseService.from('ProductImage').insert([{ productId, imageUrl }]);
 
         if (imageInsertError) {
           console.error('Error inserting image URL:', imageInsertError);
