@@ -2,6 +2,7 @@ import React from 'react';
 import ProductForm from '../../../components/ProductForm';
 import withAuth from '../../../components/withAuth';
 import { supabase } from '../../../utils/supabaseClient';
+import { supabaseService } from '../../../utils/supabaseServiceClient';
 import { useSession } from 'next-auth/react';
 
 const AddProductPage = () => {
@@ -27,7 +28,7 @@ const AddProductPage = () => {
       }
 
       // Adicionar produto
-      const { data: productData, error: productError } = await supabase
+      const { data: productData, error: productError } = await supabaseService
         .from('Product')
         .insert([{ name, sku, price, color, category, totalStock, description, totalSelled, user_id: userId }])
         .select()
@@ -42,12 +43,15 @@ const AddProductPage = () => {
 
       const productId = productData.id;
 
-      
+      // Carregar imagens para o Supabase Storage e inserir URLs na tabela ProductImage
       for (const image of images) {
         const filePath = `public/${userId}/${Date.now()}_${image.name}`;
         const { data: imageData, error: imageError } = await supabase.storage
           .from('products')
-          .upload(filePath, image);
+          .upload(filePath, image, {
+            cacheControl: '3600',
+            upsert: false
+          });
 
         if (imageError) {
           throw new Error(`Error uploading image: ${imageError.message}`);
@@ -55,7 +59,7 @@ const AddProductPage = () => {
 
         const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${filePath}`;
 
-        const { error: imageInsertError } = await supabase
+        const { error: imageInsertError } = await supabaseService
           .from('ProductImage')
           .insert([{ productId, imageUrl }]);
 
