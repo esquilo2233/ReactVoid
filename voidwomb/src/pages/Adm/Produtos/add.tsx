@@ -42,7 +42,7 @@ const AddProductPage = () => {
 
       const productId = productData.id;
 
-      // Carregar imagens para o Supabase Storage e inserir URLs na tabela ProductImage
+      
       for (const image of images) {
         const filePath = `public/${userId}/${Date.now()}_${image.name}`;
         const { data: imageData, error: imageError } = await supabase.storage
