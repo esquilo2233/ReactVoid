@@ -22,9 +22,10 @@ const AddProductPage = () => {
     try {
       const { name, sku, price, color, category, totalStock, description, totalSelled = 0, images } = formData;
       const userId = session?.user.id;
+      const accessToken = session?.user.accessToken;
 
-      if (!userId) {
-        throw new Error("User ID is not available");
+      if (!userId || !accessToken) {
+        throw new Error("User ID or access token is not available");
       }
 
       console.log('Adding product:', { name, sku, price, color, category, totalStock, description, totalSelled, user_id: userId });
@@ -47,25 +48,30 @@ const AddProductPage = () => {
 
       // Carregar imagens para o Supabase Storage e inserir URLs na tabela ProductImage
       for (const image of images) {
-        const filePath = `${userId}/${Date.now()}_${image.name}`;
+        const filePath = `public/${userId}/${Date.now()}_${image.name}`;
         console.log('Uploading image to path:', filePath);
 
-        const { data: imageData, error: imageError } = await supabase.storage.from('products').upload(filePath, image, {
-            cacheControl: '3600',
-            upsert: false
-          });
+        const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/products/${filePath}`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': image.type,
+          },
+          body: image
+        });
 
-        if (imageError) {
-          console.error('Error uploading image:', imageError);
-          throw new Error(`Error uploading image: ${imageError.message}`);
+        if (!response.ok) {
+          const error = await response.json();
+          console.error('Error uploading image:', error);
+          throw new Error(`Error uploading image: ${error.message}`);
         }
-
-        console.log('Image uploaded:', imageData);
 
         const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${filePath}`;
         console.log('Image URL:', imageUrl);
 
-        const { error: imageInsertError } = await supabaseService.from('ProductImage').insert([{ productId, imageUrl }]);
+        const { error: imageInsertError } = await supabaseService
+          .from('ProductImage')
+          .insert([{ productId, imageUrl }]);
 
         if (imageInsertError) {
           console.error('Error inserting image URL:', imageInsertError);
