@@ -53,7 +53,7 @@ const AddProductPage = () => {
           throw new Error(`Error uploading image: ${imageError.message}`);
         }
 
-        const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/s3/object/public/products/${filePath}`;
+        const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${filePath}`;
 
         const { error: imageInsertError } = await supabase
           .from('ProductImage')
