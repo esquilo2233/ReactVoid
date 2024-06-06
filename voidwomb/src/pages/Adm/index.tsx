@@ -21,7 +21,7 @@ const LoginForm = () => {
     if (result?.error) {
       setMessage(result.error);
     } else {
-      router.push('/adm/home'); // Redireciona para Adm/Home após o login bem-sucedido
+      router.push('/Adm/Home'); // Redireciona para Adm/Home após o login bem-sucedido
     }
   };
 
