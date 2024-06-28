@@ -2,38 +2,56 @@ import React from 'react';
 import ProductForm from '../../../components/ProductForm';
 import withAuth from '../../../components/withAuth';
 import { supabase } from '../../../utils/supabaseClient';
-import { supabaseService } from '../../../utils/supabaseServiceClient';
 import { useSession } from 'next-auth/react';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+interface FormData {
+  name: string;
+  sku: string;
+  price: number;
+  color: string;
+  category: string;
+  totalStock: number;
+  description: string;
+  totalSelled?: number;
+  images: File[];
+}
 
-const AddProductPage = () => {
+const AddProductPage: React.FC = () => {
   const { data: session } = useSession();
 
-  const handleAddProduct = async (formData: {
-    name: string;
-    sku: string;
-    price: number;
-    color: string;
-    category: string;
-    totalStock: number;
-    description: string;
-    totalSelled?: number;
-    images: File[];
-  }) => {
+  const uploadFile = async (file: File, userId: string): Promise<string> => {
+    const filePath = `public/${userId}/${Date.now()}_${file.name}`;
+    const bucketName = 'products'; // Nome do bucket especificado aqui
+
+    const { data, error } = await supabase.storage
+      .from(bucketName)
+      .upload(filePath, file, {
+        upsert: true, // Sobrescrever arquivos existentes com o mesmo nome
+      });
+
+    if (error) {
+      console.error('Error uploading file:', error);
+      throw new Error(`Error uploading file: ${error.message}`);
+    }
+
+    return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucketName}/${filePath}`;
+  };
+
+  const handleAddProduct = async (formData: FormData) => {
     try {
       const { name, sku, price, color, category, totalStock, description, totalSelled = 0, images } = formData;
       const userId = session?.user.id;
-      const accessToken = session?.user.accessToken;
 
-      if (!userId || !accessToken) {
-        throw new Error("User ID or access token is not available");
+      if (!userId) {
+        throw new Error("User ID is not available");
       }
 
       console.log('Adding product:', { name, sku, price, color, category, totalStock, description, totalSelled, user_id: userId });
 
       // Adicionar produto
-      const { data: productData, error: productError } = await supabaseService
+      const { data: productData, error: productError } = await supabase
         .from('Product')
         .insert([{ name, sku, price, color, category, totalStock, description, totalSelled, user_id: userId }])
         .select()
@@ -45,35 +63,15 @@ const AddProductPage = () => {
       }
 
       console.log('Product added:', productData);
-      toast("Product added:",productData);
+      toast.success("Product added successfully!");
       const productId = productData.id;
 
       // Carregar imagens para o Supabase Storage e inserir URLs na tabela ProductImage
       for (const image of images) {
-        const filePath = `public/${userId}/${Date.now()}_${image.name}`;
-        console.log('Uploading image to path:', filePath);
-
-        const formData = new FormData();
-        formData.append('file', image);
-
-        const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/products/${filePath}`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${accessToken}`
-          },
-          body: formData
-        });
-
-        if (!response.ok) {
-          const error = await response.json();
-          console.error('Error uploading image:', error);
-          throw new Error(`Error uploading image: ${error.message}`);
-        }
-
-        const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${filePath}`;
+        const imageUrl = await uploadFile(image, userId);
         console.log('Image URL:', imageUrl);
 
-        const { error: imageInsertError } = await supabaseService
+        const { error: imageInsertError } = await supabase
           .from('ProductImage')
           .insert([{ productId, imageUrl }]);
 
@@ -89,9 +87,9 @@ const AddProductPage = () => {
     } catch (error) {
       console.error('Error:', error);
       if (error instanceof Error) {
-        alert('Error adding product: ' + error.message);
+        toast.error('Error adding product: ' + error.message);
       } else {
-        alert('An unknown error occurred.');
+        toast.error('An unknown error occurred.');
       }
     }
   };
@@ -99,6 +97,7 @@ const AddProductPage = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <ProductForm onSubmit={handleAddProduct} />
+      <ToastContainer />
     </div>
   );
 };
