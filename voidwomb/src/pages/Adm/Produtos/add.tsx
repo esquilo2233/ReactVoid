@@ -4,6 +4,8 @@ import withAuth from '../../../components/withAuth';
 import { supabase } from '../../../utils/supabaseClient';
 import { supabaseService } from '../../../utils/supabaseServiceClient';
 import { useSession } from 'next-auth/react';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 const AddProductPage = () => {
   const { data: session } = useSession();
@@ -43,7 +45,7 @@ const AddProductPage = () => {
       }
 
       console.log('Product added:', productData);
-
+      toast("Product added:",productData);
       const productId = productData.id;
 
       // Carregar imagens para o Supabase Storage e inserir URLs na tabela ProductImage
