@@ -1,8 +1,7 @@
 import React from 'react';
 import ProductForm from '../../../components/ProductForm';
 import withAuth from '../../../components/withAuth';
-import { supabase } from '../../../utils/supabaseClient';
-import { supabaseService } from '../../../utils/supabaseServiceClient';
+import  {supabase}  from '../../../utils/supabaseClient';
 import { useSession } from 'next-auth/react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -35,7 +34,7 @@ const AddProductPage: React.FC = () => {
       console.log('Adding product:', { name, sku, price, color, category, totalStock, description, totalSelled, user_id: userId });
 
       // Adicionar produto
-      const { data: productData, error: productError } = await supabaseService
+      const { data: productData, error: productError } = await supabase
         .from('Product')
         .insert([{ name, sku, price, color, category, totalStock, description, totalSelled, user_id: userId }])
         .select()
@@ -55,27 +54,21 @@ const AddProductPage: React.FC = () => {
         const filePath = `public/${userId}/${Date.now()}_${image.name}`;
         console.log('Uploading image to path:', filePath);
 
-        const imageFormData = new FormData();
-        imageFormData.append('file', image);
+        const { error: uploadError } = await supabase.storage
+          .from('products')
+          .upload(filePath, image, {
+            upsert: true, // Upsert permite sobrescrever arquivos existentes com o mesmo nome
+          });
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/products/${filePath}`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${accessToken}`
-          },
-          body: imageFormData
-        });
-
-        if (!response.ok) {
-          const error = await response.json();
-          console.error('Error uploading image:', error);
-          throw new Error(`Error uploading image: ${error.message}`);
+        if (uploadError) {
+          console.error('Error uploading image:', uploadError);
+          throw new Error(`Error uploading image: ${uploadError.message}`);
         }
 
         const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${filePath}`;
         console.log('Image URL:', imageUrl);
 
-        const { error: imageInsertError } = await supabaseService
+        const { error: imageInsertError } = await supabase
           .from('ProductImage')
           .insert([{ productId, imageUrl }]);
 
