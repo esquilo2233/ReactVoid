@@ -53,7 +53,7 @@ const AddProductPage = () => {
         const filePath = `public/${userId}/${Date.now()}_${image.name}`;
         console.log('Uploading image to path:', filePath);
 
-        const { data, error } = await supabase.storage.from('product').upload(filePath, image)
+        const { data, error } = await supabase.storage.from('products').upload(filePath, image)
         if (error) {
           console.error('Error uploading image:', error);
           throw new Error(`Error uploading image: ${error}`);
