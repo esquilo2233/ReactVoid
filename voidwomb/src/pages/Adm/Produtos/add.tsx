@@ -45,7 +45,7 @@ const AddProductPage = () => {
       }
 
       console.log('Product added:', productData);
-      toast("Product added:",productData);
+      toast("Product added:",productData.name);
       const productId = productData.id;
 
       // Carregar imagens para o Supabase Storage e inserir URLs na tabela ProductImage
