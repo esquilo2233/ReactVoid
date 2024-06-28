@@ -76,3 +76,4 @@ export const deleteProduct = async (id: number): Promise<Product> => {
     throw error;
   }
 };
+  
