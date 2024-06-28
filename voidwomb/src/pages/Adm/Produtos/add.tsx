@@ -1,7 +1,8 @@
 import React from 'react';
 import ProductForm from '../../../components/ProductForm';
 import withAuth from '../../../components/withAuth';
-import  {supabase}  from '../../../utils/supabaseClient';
+import { supabase } from '../../../utils/supabaseClient';
+import { supabaseService } from '../../../utils/supabaseServiceClient';
 import { useSession } from 'next-auth/react';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -32,7 +33,7 @@ const AddProductPage = () => {
       console.log('Adding product:', { name, sku, price, color, category, totalStock, description, totalSelled, user_id: userId });
 
       // Adicionar produto
-      const { data: productData, error: productError } = await supabase
+      const { data: productData, error: productError } = await supabaseService
         .from('Product')
         .insert([{ name, sku, price, color, category, totalStock, description, totalSelled, user_id: userId }])
         .select()
@@ -44,7 +45,7 @@ const AddProductPage = () => {
       }
 
       console.log('Product added:', productData);
-      toast("Product added:",productData.name);
+      toast("Product added:",productData);
       const productId = productData.id;
 
       // Carregar imagens para o Supabase Storage e inserir URLs na tabela ProductImage
@@ -72,7 +73,7 @@ const AddProductPage = () => {
         const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${filePath}`;
         console.log('Image URL:', imageUrl);
 
-        const { error: imageInsertError } = await supabase
+        const { error: imageInsertError } = await supabaseService
           .from('ProductImage')
           .insert([{ productId, imageUrl }]);
 
