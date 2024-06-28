@@ -5,22 +5,24 @@ import { supabase } from '../../../utils/supabaseClient';
 import { supabaseService } from '../../../utils/supabaseServiceClient';
 import { useSession } from 'next-auth/react';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+interface FormData {
+  name: string;
+  sku: string;
+  price: number;
+  color: string;
+  category: string;
+  totalStock: number;
+  description: string;
+  totalSelled?: number;
+  images: File[];
+}
 
-const AddProductPage = () => {
+const AddProductPage: React.FC = () => {
   const { data: session } = useSession();
 
-  const handleAddProduct = async (formData: {
-    name: string;
-    sku: string;
-    price: number;
-    color: string;
-    category: string;
-    totalStock: number;
-    description: string;
-    totalSelled?: number;
-    images: File[];
-  }) => {
+  const handleAddProduct = async (formData: FormData) => {
     try {
       const { name, sku, price, color, category, totalStock, description, totalSelled = 0, images } = formData;
       const userId = session?.user.id;
@@ -45,7 +47,7 @@ const AddProductPage = () => {
       }
 
       console.log('Product added:', productData);
-      toast("Product added:",productData.name);
+      toast.success("Product added successfully!");
       const productId = productData.id;
 
       // Carregar imagens para o Supabase Storage e inserir URLs na tabela ProductImage
@@ -53,15 +55,15 @@ const AddProductPage = () => {
         const filePath = `public/${userId}/${Date.now()}_${image.name}`;
         console.log('Uploading image to path:', filePath);
 
-        const formData = new FormData();
-        formData.append('file', image);
+        const imageFormData = new FormData();
+        imageFormData.append('file', image);
 
         const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/products/${filePath}`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${accessToken}`
           },
-          body: formData
+          body: imageFormData
         });
 
         if (!response.ok) {
@@ -89,9 +91,9 @@ const AddProductPage = () => {
     } catch (error) {
       console.error('Error:', error);
       if (error instanceof Error) {
-        alert('Error adding product: ' + error.message);
+        toast.error('Error adding product: ' + error.message);
       } else {
-        alert('An unknown error occurred.');
+        toast.error('An unknown error occurred.');
       }
     }
   };
@@ -99,6 +101,7 @@ const AddProductPage = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <ProductForm onSubmit={handleAddProduct} />
+      <ToastContainer />
     </div>
   );
 };
