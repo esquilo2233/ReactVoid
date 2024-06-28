@@ -6,7 +6,6 @@ import { supabaseService } from '../../../utils/supabaseServiceClient';
 import { useSession } from 'next-auth/react';
 import { ToastContainer, toast } from 'react-toastify';
 
-
 const AddProductPage = () => {
   const { data: session } = useSession();
 
@@ -45,7 +44,7 @@ const AddProductPage = () => {
       }
 
       console.log('Product added:', productData);
-      toast("Product added:",productData);
+      toast.success("Product added successfully!");
       const productId = productData.id;
 
       // Carregar imagens para o Supabase Storage e inserir URLs na tabela ProductImage
@@ -53,12 +52,12 @@ const AddProductPage = () => {
         const filePath = `public/${userId}/${Date.now()}_${image.name}`;
         console.log('Uploading image to path:', filePath);
 
-        const { data, error } = await supabase.storage.from('products').upload(filePath, image)
+        const { data, error } = await supabase.storage.from('products').upload(filePath, image);
         if (error) {
           console.error('Error uploading image:', error);
           throw new Error(`Error uploading image: ${error}`);
         } else {
-          console.log('Imagem enviada com sucesso:',image.name)
+          console.log('Imagem enviada com sucesso:',image.name);
         }
 
         const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${filePath}`;
@@ -80,9 +79,9 @@ const AddProductPage = () => {
     } catch (error) {
       console.error('Error:', error);
       if (error instanceof Error) {
-        alert('Error adding product: ' + error.message);
+        toast.error('Error adding product: ' + error.message);
       } else {
-        alert('An unknown error occurred.');
+        toast.error('An unknown error occurred.');
       }
     }
   };
@@ -90,6 +89,7 @@ const AddProductPage = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <ProductForm onSubmit={handleAddProduct} />
+      <ToastContainer />
     </div>
   );
 };
