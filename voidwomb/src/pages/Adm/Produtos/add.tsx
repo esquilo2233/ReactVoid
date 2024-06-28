@@ -4,24 +4,22 @@ import withAuth from '../../../components/withAuth';
 import  {supabase}  from '../../../utils/supabaseClient';
 import { useSession } from 'next-auth/react';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
-interface FormData {
-  name: string;
-  sku: string;
-  price: number;
-  color: string;
-  category: string;
-  totalStock: number;
-  description: string;
-  totalSelled?: number;
-  images: File[];
-}
 
-const AddProductPage: React.FC = () => {
+const AddProductPage = () => {
   const { data: session } = useSession();
 
-  const handleAddProduct = async (formData: FormData) => {
+  const handleAddProduct = async (formData: {
+    name: string;
+    sku: string;
+    price: number;
+    color: string;
+    category: string;
+    totalStock: number;
+    description: string;
+    totalSelled?: number;
+    images: File[];
+  }) => {
     try {
       const { name, sku, price, color, category, totalStock, description, totalSelled = 0, images } = formData;
       const userId = session?.user.id;
@@ -46,7 +44,7 @@ const AddProductPage: React.FC = () => {
       }
 
       console.log('Product added:', productData);
-      toast.success("Product added successfully!");
+      toast("Product added:",productData.name);
       const productId = productData.id;
 
       // Carregar imagens para o Supabase Storage e inserir URLs na tabela ProductImage
@@ -54,15 +52,21 @@ const AddProductPage: React.FC = () => {
         const filePath = `public/${userId}/${Date.now()}_${image.name}`;
         console.log('Uploading image to path:', filePath);
 
-        const { error: uploadError } = await supabase.storage
-          .from('products')
-          .upload(filePath, image, {
-            upsert: true, // Upsert permite sobrescrever arquivos existentes com o mesmo nome
-          });
+        const formData = new FormData();
+        formData.append('file', image);
 
-        if (uploadError) {
-          console.error('Error uploading image:', uploadError);
-          throw new Error(`Error uploading image: ${uploadError.message}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/products/${filePath}`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          },
+          body: formData
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          console.error('Error uploading image:', error);
+          throw new Error(`Error uploading image: ${error.message}`);
         }
 
         const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${filePath}`;
@@ -84,9 +88,9 @@ const AddProductPage: React.FC = () => {
     } catch (error) {
       console.error('Error:', error);
       if (error instanceof Error) {
-        toast.error('Error adding product: ' + error.message);
+        alert('Error adding product: ' + error.message);
       } else {
-        toast.error('An unknown error occurred.');
+        alert('An unknown error occurred.');
       }
     }
   };
@@ -94,7 +98,6 @@ const AddProductPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <ProductForm onSubmit={handleAddProduct} />
-      <ToastContainer />
     </div>
   );
 };
