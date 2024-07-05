@@ -1,33 +1,75 @@
-// pages/adm/produtos/index.tsx
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import ProductList from '.././../../components/ProductList';
-import { getProducts, deleteProduct } from '../../../services/productService';
+import ProductList from '../../../components/ProductList';
+import { useSession } from 'next-auth/react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import withAuth from '../../../components/withAuth';
+import { supabase } from '../../../utils/supabaseClient';
 
 const ProductAdminPage: React.FC = () => {
   const [products, setProducts] = useState<any[]>([]);
+  const { data: session } = useSession();
   const router = useRouter();
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const products = await getProducts();
-      setProducts(products);
+      try {
+        const accessToken = session?.accessToken;
+
+        if (!accessToken) {
+          throw new Error("Access token is not available");
+        }
+
+        const { data, error } = await supabase
+          .from('products')
+          .select('*');
+
+        if (error) {
+          throw error;
+        }
+
+        setProducts(data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        toast.error('Error fetching products: ' + error.message);
+      }
     };
+
     fetchProducts();
-  }, []);
+  }, [session]);
 
   const handleDelete = async (id: number) => {
-    await deleteProduct(id);
-    setProducts(products.filter(product => product.id !== id));
+    try {
+      const accessToken = session?.accessToken;
+
+      if (!accessToken) {
+        throw new Error("Access token is not available");
+      }
+
+      const { error } = await supabase
+        .from('products')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        throw error;
+      }
+
+      setProducts(products.filter(product => product.id !== id));
+      toast.success('Product deleted successfully');
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      toast.error('Error deleting product');
+    }
   };
 
   return (
     <div>
       <h1>Product Administration</h1>
-      
-      <button onClick={() => router.push('/Adm/Produtos/add')}>Add Product</button>
+      <button onClick={() => router.push('/adm/produtos/add')}>Add Product</button>
       <ProductList products={products} onDelete={handleDelete} />
+      <ToastContainer />
     </div>
   );
 };
