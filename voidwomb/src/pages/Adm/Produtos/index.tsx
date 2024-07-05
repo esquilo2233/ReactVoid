@@ -14,13 +14,8 @@ const ProductAdminPage: React.FC = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
+      const accessToken = session?.user.accessToken;
       try {
-        const accessToken = session?.user.accessToken;
-
-        if (!accessToken) {
-          throw new Error("Access token is not available");
-        }
-
         const { data, error } = await supabase
           .from('Product')
           .select('*');
@@ -28,7 +23,7 @@ const ProductAdminPage: React.FC = () => {
         if (error) {
           throw error;
         }
-
+        console.log('Fetched products:', data);
         setProducts(data);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -37,16 +32,11 @@ const ProductAdminPage: React.FC = () => {
     };
 
     fetchProducts();
-  }, [session]);
+  }, []);
 
   const handleDelete = async (id: number) => {
+    const accessToken = session?.user.accessToken;
     try {
-      const accessToken = session?.user.accessToken;
-
-      if (!accessToken) {
-        throw new Error("Access token is not available");
-      }
-
       const { error } = await supabase
         .from('Product')
         .delete()
@@ -60,14 +50,14 @@ const ProductAdminPage: React.FC = () => {
       toast.success('Product deleted successfully');
     } catch (error) {
       console.error('Error deleting product:', error);
-      toast.error('Error deleting product');
+      toast.error('Error deleting product.' );
     }
   };
 
   return (
     <div>
       <h1>Product Administration</h1>
-      <button onClick={() => router.push('/adm/produtos/add')}>Add Product</button>
+      <button onClick={() => router.push('/Adm/Produtos/add')}>Add Product</button>
       <ProductList products={products} onDelete={handleDelete} />
       <ToastContainer />
     </div>
