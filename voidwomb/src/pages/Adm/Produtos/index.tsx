@@ -15,7 +15,7 @@ const ProductAdminPage: React.FC = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const accessToken = session?.accessToken;
+        const accessToken = session?.user.accessToken;
 
         if (!accessToken) {
           throw new Error("Access token is not available");
@@ -32,7 +32,7 @@ const ProductAdminPage: React.FC = () => {
         setProducts(data);
       } catch (error) {
         console.error('Error fetching products:', error);
-        toast.error('Error fetching products: ' + error.message);
+        toast.error('Error fetching products');
       }
     };
 
@@ -41,7 +41,7 @@ const ProductAdminPage: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      const accessToken = session?.accessToken;
+      const accessToken = session?.user.accessToken;
 
       if (!accessToken) {
         throw new Error("Access token is not available");

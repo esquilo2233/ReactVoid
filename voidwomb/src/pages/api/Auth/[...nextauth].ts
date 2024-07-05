@@ -96,7 +96,7 @@ const authHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           session.user.id = token.id;
           session.user.email = token.email;
           session.user.is_staff = token.is_staff;
-          session.user.accessToken = token.accessToken; // Inclua accessToken aqui
+          session.user.accessToken = token.accessToken;
         }
         return session;
       },
