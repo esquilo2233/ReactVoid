@@ -22,7 +22,7 @@ const ProductAdminPage: React.FC = () => {
         }
 
         const { data, error } = await supabase
-          .from('products')
+          .from('Product')
           .select('*');
 
         if (error) {
@@ -48,7 +48,7 @@ const ProductAdminPage: React.FC = () => {
       }
 
       const { error } = await supabase
-        .from('products')
+        .from('Product')
         .delete()
         .eq('id', id);
 
