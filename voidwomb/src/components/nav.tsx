@@ -25,7 +25,7 @@ const Navbar: React.FC = () => {
               <Link href="/Home" className="block py-2 px-3 text-white rounded md:bg-transparent md:text-white md:p-0 dark:text-white">Home</Link>
             </li>
              <li>
-              <Link href="https://voidwomb.bigcartel.com/category/merchandise" className="block py-2 px-3 text-white rounded md:bg-transparent md:text-white md:p-0 dark:text-white">Store</Link>
+              <Link href="https://voidwomb.bigcartel.com/category/merchandise" target='_blank' className="block py-2 px-3 text-white rounded md:bg-transparent md:text-white md:p-0 dark:text-white">Store</Link>
             </li>
             <li>
               <Link href="/concept" className="block py-2 px-3 text-white rounded md:bg-transparent md:text-white md:p-0 dark:text-white">Concept</Link>
