@@ -24,9 +24,9 @@ const Navbar: React.FC = () => {
             <li>
               <Link href="/Home" className="block py-2 px-3 text-white rounded md:bg-transparent md:text-white md:p-0 dark:text-white">Home</Link>
             </li>
-            {/* <li>
-              <Link href="/store" className="block py-2 px-3 text-white rounded md:bg-transparent md:text-white md:p-0 dark:text-white">Store</Link>
-            </li> */}
+             <li>
+              <Link href="https://voidwomb.bigcartel.com/category/merchandise" className="block py-2 px-3 text-white rounded md:bg-transparent md:text-white md:p-0 dark:text-white">Store</Link>
+            </li>
             <li>
               <Link href="/concept" className="block py-2 px-3 text-white rounded md:bg-transparent md:text-white md:p-0 dark:text-white">Concept</Link>
             </li>
@@ -48,15 +48,6 @@ const Navbar: React.FC = () => {
             )
               
             }
-                
-            {/* <li>
-              <Link href="/cart" className="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-white md:p-0 dark:text-white md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                <div className="flex items-center">
-                  <Image src="/img/cart.png" alt='' className="w-6 h-6 filter invert" width={24} height={24}/>
-                  <span id="cart-total" className="ml-2"></span>
-                </div>
-              </Link>
-            </li> */}
           </ul>
         </div>
       </div>
