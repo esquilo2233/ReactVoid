@@ -232,6 +232,23 @@ function Rituals() {
                             <a href="https://www.notikumi.com/channel/asociacion-deathlight-music/2024/11/9/extreme-division-mallorca-v" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Event</a>
                         </td>
                     </tr>
+                    <tr className="bg-black border-b dark:border-gray-700">
+                        <th scope="row" className="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-white">
+                        Lume Clandestino Fest
+                        </th>
+                        <td className="px-6 py-4 text-white">
+                            14/12/2024
+                        </td>
+                        <td className="px-6 py-4 text-white">
+                            Vigo, Spain
+                        </td>
+                        <td className="px-6 py-4 text-white">
+                            Transylvania Pub, Vigo
+                        </td>
+                        <td className="px-6 py-4 text-white">
+                            <a href="" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Event</a>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
