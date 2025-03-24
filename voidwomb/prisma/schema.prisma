@@ -1,10 +1,11 @@
-datasource db {
-  provider = "postgresql"
-  url      = env("POSTGRES_PRISMA_URL")
-}
-
 generator client {
   provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Account {
@@ -57,22 +58,23 @@ model VerificationToken {
 }
 
 model Product {
-  id           Int          @id @default(autoincrement())
+  id           Int       @id @default(autoincrement())
   name         String
-  sku          String        @unique
+  sku          String    @unique
   price        Float
   color        String
   category     Category?
   totalStock   Int
   totalSelled  Int
   description  String
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  createdAt    DateTime  @default(now()) // Certifique-se de que este campo está presente
+  updatedAt    DateTime  @updatedAt
   userId       Int
-  user         Users         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         Users     @relation(fields: [userId], references: [id], onDelete: Cascade)
   images       ProductImage[]
   sizes        ProductSize[]
 }
+
 
 model ProductImage {
   id         Int       @id @default(autoincrement())
