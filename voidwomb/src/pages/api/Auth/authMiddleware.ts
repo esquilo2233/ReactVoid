@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import { JWT } from 'next-auth/jwt';
 
 // Defina uma interface que estenda JwtPayload e inclua as propriedades que você espera no token
 interface CustomJwtPayload extends JwtPayload {
