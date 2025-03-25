@@ -10,10 +10,10 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
     return (
-        <div>
+        <div className="flex flex-col min-h-screen">
             <Navbar/>
             <SpeedInsights />
-            <main>{children}</main>
+            <main className="flex-grow">{children}</main>
             <Footer/>
         </div>
     );
