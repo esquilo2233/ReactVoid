@@ -32,7 +32,7 @@ const ProductAdminPage: React.FC = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [session?.user.accessToken]);
 
   const handleDelete = async (id: number) => {
     const accessToken = session?.user.accessToken;

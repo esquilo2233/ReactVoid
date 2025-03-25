@@ -5,7 +5,7 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  directUrl = env("SESSION_URL")
 }
 
 model Account {
@@ -40,13 +40,21 @@ model Users {
   id           Int       @id @default(autoincrement())
   email        String    @unique
   password     String
-  is_staff     Boolean
+  name         String?
+  is_staff     Boolean   @default(false)
+  is_active    Boolean   @default(true)
   created_at   DateTime  @default(now())
   last_login   DateTime?
+  phone        String?
+  address      String?
+  newsletter_subscription NewsletterSubscription?
 
-  accounts Account[]
-  sessions Session[]
-  products Product[]
+  accounts     Account[]
+  sessions     Session[]
+  products     Product[]
+  transactions Transaction[]
+  sales        Sale[]
+  logs         Log[]
 }
 
 model VerificationToken {
@@ -67,14 +75,17 @@ model Product {
   totalStock   Int
   totalSelled  Int
   description  String
-  createdAt    DateTime  @default(now()) // Certifique-se de que este campo está presente
+  is_active    Boolean   @default(true)
+  createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   userId       Int
   user         Users     @relation(fields: [userId], references: [id], onDelete: Cascade)
   images       ProductImage[]
   sizes        ProductSize[]
+  transactions Transaction[]
+  sales        SaleItem[]
+  logs         Log[]
 }
-
 
 model ProductImage {
   id         Int       @id @default(autoincrement())
@@ -93,9 +104,137 @@ model ProductSize {
   product    Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
+model Transaction {
+  id              Int       @id @default(autoincrement())
+  userId          Int
+  productId       Int
+  amount          Float
+  status          TransactionStatus @default(pending)
+  transactionUrl  String?   
+  directUrl       String?   
+  sessionUrl      String?   
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  user            Users     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product         Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  logs            Log[]
+}
+
+model GuestUser {
+  id          Int       @id @default(autoincrement())
+  email       String    @unique
+  name        String?
+  phone       String?
+  address     String?
+  createdAt   DateTime  @default(now())
+  sales       Sale[]
+  logs        Log[]
+}
+
+model Sale {
+  id              Int         @id @default(autoincrement())
+  userId          Int?        
+  guestUserId     Int?        
+  totalAmount     Float
+  paymentId       String?     
+  paymentProvider  String?     
+  paymentStatus   String?    
+  shippingAddress String
+  trackingNumber  String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  status          SaleStatus? @default(pending)
+  user            Users?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  guestUser       GuestUser?  @relation(fields: [guestUserId], references: [id], onDelete: SetNull)
+  items           SaleItem[]
+  logs            Log[]
+}
+
+model SaleItem {
+  id          Int       @id @default(autoincrement())
+  saleId      Int
+  productId   Int
+  quantity    Int
+  price       Float
+  size        String?
+
+  sale        Sale      @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Log {
+  id          Int       @id @default(autoincrement())
+  userId      Int?
+  email       String?   // Email do usuário
+  action      String    // login, logout, admin_access, database_update
+  details     String?   // detalhes específicos da ação
+  ipAddress   String?
+  createdAt   DateTime  @default(now())
+  user        Users?    @relation(fields: [userId], references: [id])
+  product     Product?  @relation(fields: [productId], references: [id])
+  transaction Transaction? @relation(fields: [transactionId], references: [id])
+  guestUser   GuestUser? @relation(fields: [guestUserId], references: [id])
+  sale        Sale?     @relation(fields: [saleId], references: [id])
+  newsletter  Newsletter? @relation(fields: [newsletterId], references: [id])
+  productId   Int?
+  transactionId Int?
+  guestUserId Int?
+  saleId      Int?
+  newsletterId Int?
+}
+
 enum Category {
   CD
   Vinyl
   T_shirt
   Longsleeves
+}
+
+enum SaleStatus {
+  pending
+  processing
+  shipped
+  delivered
+  cancelled
+  refunded
+}
+
+enum TransactionStatus {
+  pending
+  completed
+  failed
+  refunded
+  cancelled
+}
+
+model Newsletter {
+  id          Int       @id @default(autoincrement())
+  title       String
+  content     String    @db.Text
+  status      NewsletterStatus @default(draft)
+  sentAt      DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  subscriptions NewsletterSubscription[]
+  logs        Log[]
+}
+
+model NewsletterSubscription {
+  id          Int       @id @default(autoincrement())
+  userId      Int       @unique
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  lastSentAt  DateTime?
+  newsletters Newsletter[]
+
+  user        Users     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum NewsletterStatus {
+  draft
+  scheduled
+  sent
+  failed
 }

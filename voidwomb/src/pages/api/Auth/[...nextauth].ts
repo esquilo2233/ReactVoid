@@ -1,10 +1,10 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import NextAuth from 'next-auth';
+import NextAuth, { AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import prisma from '../../../utils/prisma';
-import { compare } from 'bcryptjs';
+import { prisma } from '../../../lib/prisma';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { createLog } from '../../../lib/logger';
+import { getClientIp } from '../../../lib/getClientIp';
 
 declare module 'next-auth' {
   interface Session {
@@ -27,98 +27,117 @@ declare module 'next-auth' {
 declare module 'next-auth/jwt' {
   interface JWT {
     id: string;
-    email: string;
     is_staff: boolean;
     accessToken?: string;
   }
 }
 
-const allowedOrigins = ['https://voidwomb.com', 'https://dev.voidwomb.com', 'https://qa.voidwomb.com','http://localhost:3000'];
-
-const checkOrigin = (req: NextApiRequest): boolean => {
-  const origin = req.headers.origin;
-  const referer = req.headers.referer;
-  return allowedOrigins.some((allowedOrigin) => referer?.startsWith(allowedOrigin) || origin === allowedOrigin);
-};
-
-const authHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (!checkOrigin(req)) {
-    res.status(403).json({ error: 'Forbidden' });
-    return;
-  }
-
-  return NextAuth(req, res, {
-    providers: [
-      CredentialsProvider({
-        name: 'Credentials',
-        credentials: {
-          email: { label: 'Email', type: 'text' },
-          password: { label: 'Password', type: 'password' },
-        },
-        async authorize(credentials) {
+const authOptions: AuthOptions = {
+  providers: [
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Senha", type: "password" }
+      },
+      async authorize(credentials, req) {
+        try {
           if (!credentials?.email || !credentials?.password) {
-            throw new Error('Email and password required');
+            throw new Error('Credenciais inválidas');
           }
 
           const user = await prisma.users.findUnique({
-            where: { email: credentials.email },
+            where: {
+              email: credentials.email
+            }
           });
 
           if (!user) {
-            throw new Error('No user found with the email');
+            throw new Error('Usuário não encontrado');
           }
 
-          const isValid = await compare(credentials.password, user.password);
-          if (!isValid) {
-            throw new Error('Password is incorrect');
+          const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
+
+          if (!isPasswordValid) {
+            throw new Error('Senha incorreta');
           }
 
-          // Gerar um token de exemplo aqui. Idealmente, você deve gerar um token real.
+          // Criar o token JWT
           const accessToken = jwt.sign(
-            { id: user.id, email: user.email, is_staff: user.is_staff },
-            process.env.NEXTAUTH_SECRET || 'supersecret',
-            { expiresIn: '1h' }
+            { 
+              id: user.id,
+              email: user.email,
+              is_staff: user.is_staff 
+            },
+            process.env.JWT_SECRET || 'seu_jwt_secret_aqui',
+            { expiresIn: '30d' }
           );
 
-          // Retorne o user com a propriedade accessToken
-          return { id: user.id.toString(), email: user.email, is_staff: user.is_staff, accessToken };
-        },
-      }),
-    ],
-    adapter: PrismaAdapter(prisma),
-    secret: process.env.NEXTAUTH_SECRET,
-    session: {
-      strategy: 'jwt',
-    },
-    callbacks: {
-      async session({ session, token }) {
-        if (token && session.user) {
-          session.user.id = token.id;
-          session.user.email = token.email;
-          session.user.is_staff = token.is_staff;
-          session.user.accessToken = token.accessToken;
+          // Registrar log de login
+          await createLog({
+            userId: user.id,
+            email: user.email,
+            action: 'login',
+            details: 'Login bem-sucedido',
+            ipAddress: getClientIp(req as any)
+          });
+
+          return {
+            id: user.id.toString(),
+            email: user.email,
+            name: user.name || undefined,
+            is_staff: user.is_staff,
+            accessToken
+          };
+        } catch (error) {
+          console.error('Erro na autenticação:', error);
+          throw error;
         }
-        return session;
-      },
-      async jwt({ token, user }) {
-        if (user) {
-          token.id = user.id;
-          token.email = user.email;
-          token.is_staff = user.is_staff;
-          token.accessToken = user.accessToken; // Inclua accessToken aqui
-          console.log("JWT token: ", token);
-        }
-        return token;
-      },
+      }
+    })
+  ],
+  session: {
+    strategy: 'jwt' as const,
+    maxAge: 30 * 24 * 60 * 60, // 30 dias
+  },
+  callbacks: {
+    async jwt({ token, user }: { token: any; user: any }) {
+      if (user) {
+        token.id = user.id;
+        token.is_staff = user.is_staff;
+        token.accessToken = user.accessToken;
+      }
+      return token;
     },
-    pages: {
-      signIn: '/auth/signin',
-      signOut: '/auth/signout',
-      error: '/auth/error',
-      verifyRequest: '/auth/verify-request',
-      newUser: '/auth/new-user',
-    },
-  });
+    async session({ session, token }: { session: any; token: any }) {
+      if (session.user) {
+        session.user.id = token.id;
+        session.user.is_staff = token.is_staff;
+        session.user.accessToken = token.accessToken;
+      }
+      return session;
+    }
+  },
+  events: {
+    async signOut({ token }) {
+      if (token) {
+        await createLog({
+          userId: parseInt(token.id),
+          email: token.email,
+          action: 'logout',
+          details: 'Logout realizado',
+          ipAddress: 'IP_DESCONHECIDO' // Não temos acesso ao req no evento signOut
+        });
+      }
+    }
+  },
+  pages: {
+    signIn: '/auth/login',
+    signOut: '/auth/logout',
+    error: '/auth/error',
+  },
+  debug: process.env.NODE_ENV === 'development',
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
-export default authHandler;
+export default NextAuth(authOptions);

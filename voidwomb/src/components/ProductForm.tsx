@@ -65,6 +65,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, product }) => {
     onSubmit(formData);
   };
 
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    setImages(files);
+  };
+
   return (
     <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold text-center mb-4">{product ? 'Edit Product' : 'Add Product'}</h2>
@@ -151,7 +156,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, product }) => {
           id="images"
           type="file"
           multiple
-          onChange={(e) => setImages(Array.from(e.target.files || []))}
+          onChange={handleImageChange}
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
