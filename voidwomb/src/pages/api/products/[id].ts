@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../../utils/prisma';
-import { authenticate } from '../auth/authMiddleware';
+import {authenticate} from '../Auth/authMiddleware';
 import Joi from 'joi';
 
 // Definir esquema de validação para PUT
