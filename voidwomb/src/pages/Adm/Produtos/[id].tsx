@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import ProductForm from '../../../components/ProductForm';
 import withAuth from '../../../components/withAuth';
 
+
 interface Product {
   id: number;
   name: string;
