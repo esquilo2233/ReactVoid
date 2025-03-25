@@ -26,15 +26,15 @@ export default function SignIn() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded shadow-md">
-        <h2 className="text-2xl font-bold text-center">Sign In</h2>
-        {error && <div className="text-red-500 text-center">{error}</div>}
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
+    <div className="min-h-screen bg-black flex items-center justify-center py-48">
+      <div className="w-full max-w-md p-8">
+        <h2 className="text-4xl font-bold text-center text-white mb-12">Sign In</h2>
+        {error && <div className="text-red-500 text-center mb-8">{error}</div>}
+        <form className="space-y-8" onSubmit={handleSubmit}>
+          <div className="space-y-6">
             <div>
-              <label htmlFor="email" className="sr-only">
-                Email address
+              <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
+                Email
               </label>
               <input
                 id="email"
@@ -42,14 +42,14 @@ export default function SignIn() {
                 type="email"
                 autoComplete="email"
                 required
-                className="relative block w-full px-3 py-2 border border-gray-300 rounded-t-md focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                placeholder="Email address"
+                className="w-full px-4 py-3 bg-transparent border border-white rounded-lg focus:ring-1 focus:ring-white text-white placeholder-gray-400"
+                placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div>
-              <label htmlFor="password" className="sr-only">
+              <label htmlFor="password" className="block text-sm font-medium text-white mb-2">
                 Password
               </label>
               <input
@@ -58,8 +58,8 @@ export default function SignIn() {
                 type="password"
                 autoComplete="current-password"
                 required
-                className="relative block w-full px-3 py-2 border border-gray-300 rounded-b-md focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                placeholder="Password"
+                className="w-full px-4 py-3 bg-transparent border border-white rounded-lg focus:ring-1 focus:ring-white text-white placeholder-gray-400"
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -68,7 +68,7 @@ export default function SignIn() {
           <div>
             <button
               type="submit"
-              className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              className="w-full px-6 py-3 text-white border border-white rounded-lg hover:bg-white hover:bg-opacity-10 focus:outline-none focus:ring-1 focus:ring-white transition duration-200"
             >
               Sign In
             </button>

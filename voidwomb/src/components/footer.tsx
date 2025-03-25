@@ -2,8 +2,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 const Footer: React.FC = () => {
-    return <footer className="bg-black text-white shadow-md p-4 bottom-0 left-0 w-full z-1">
-        <div className="mx-auto max-w-screen-xl flex flex-col md:flex-row justify-between items-center">
+    return <footer className="bg-black text-white mt-auto w-full">
+        <div className="mx-auto max-w-screen-xl flex flex-col md:flex-row justify-between items-center p-4">
             <span className="text-sm sm:text-center">© 2024 <a href="https://flowbite.com/" className="hover:underline">VoidWomb</a>. All Rights Reserved.</span>
             <ul className="flex flex-wrap items-center mt-3 sm:mt-0 gap-4 text-sm">
                 <li>
