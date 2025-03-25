@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../../utils/prisma';
-import { authenticate } from '../auth/authMiddleware';
+import { authenticate } from '../Auth/authMiddleware';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
