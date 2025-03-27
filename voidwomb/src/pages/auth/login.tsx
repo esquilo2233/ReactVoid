@@ -78,7 +78,9 @@ export default function Login() {
 
       if (result?.ok) {
         toast.success('Login realizado com sucesso!');
-        router.push('/');
+        // Redirecionar para a página anterior ou para a página inicial
+        const callbackUrl = router.query.callbackUrl as string || '/';
+        router.push(callbackUrl);
       } else {
         toast.error('Erro ao fazer login. Tente novamente.');
       }

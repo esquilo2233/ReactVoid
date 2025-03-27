@@ -21,7 +21,9 @@ export async function middleware(request: NextRequest) {
   // Verificar se o usuário está autenticado para acessar a área administrativa
   if (path.startsWith('/Adm/')) {
     if (!token) {
-      return NextResponse.redirect(new URL('/auth/login', request.url));
+      const loginUrl = new URL('/auth/login', request.url);
+      loginUrl.searchParams.set('callbackUrl', path);
+      return NextResponse.redirect(loginUrl);
     }
 
     if (!token.is_staff) {

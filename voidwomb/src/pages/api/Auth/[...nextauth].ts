@@ -43,7 +43,7 @@ const authOptions: AuthOptions = {
       async authorize(credentials, req) {
         try {
           if (!credentials?.email || !credentials?.password) {
-            throw new Error('Credenciais inválidas');
+            throw new Error('Por favor, preencha todos os campos');
           }
 
           const user = await prisma.users.findUnique({
@@ -53,13 +53,13 @@ const authOptions: AuthOptions = {
           });
 
           if (!user) {
-            throw new Error('Usuário não encontrado');
+            throw new Error('Email ou senha incorretos');
           }
 
           const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
 
           if (!isPasswordValid) {
-            throw new Error('Senha incorreta');
+            throw new Error('Email ou senha incorretos');
           }
 
           // Criar o token JWT
@@ -69,7 +69,7 @@ const authOptions: AuthOptions = {
               email: user.email,
               is_staff: user.is_staff 
             },
-            process.env.JWT_SECRET || 'seu_jwt_secret_aqui',
+            process.env.NEXTAUTH_SECRET || 'seu_jwt_secret_aqui',
             { expiresIn: '30d' }
           );
 
