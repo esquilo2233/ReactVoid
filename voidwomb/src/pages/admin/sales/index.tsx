@@ -27,7 +27,7 @@ export default function SalesPage() {
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push('/auth/login');
+      router.push('/admin/login');
       return;
     }
 

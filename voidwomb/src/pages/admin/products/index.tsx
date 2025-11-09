@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
@@ -17,39 +16,54 @@ interface Product {
 }
 
 export default function ProductsPage() {
-  const { data: session, status } = useSession();
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/auth/login');
-      return;
-    }
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('auth_token');
+      const isStaff = localStorage.getItem('is_staff') === 'true';
 
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch('/api/admin/products');
-        if (!response.ok) throw new Error('Erro ao carregar produtos');
-        const data = await response.json();
-        setProducts(data);
-      } catch (error) {
-        toast.error('Erro ao carregar produtos');
-      } finally {
-        setIsLoading(false);
+      if (!token || !isStaff) {
+        router.push('/admin/login');
+        return;
       }
-    };
 
-    fetchProducts();
-  },  [status, router, session?.user.accessToken]); 
+      setIsAuthenticated(true);
+
+      const fetchProducts = async () => {
+        try {
+          const response = await fetch('/api/admin/products', {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          if (!response.ok) throw new Error('Erro ao carregar produtos');
+          const data = await response.json();
+          setProducts(data);
+        } catch (error) {
+          toast.error('Erro ao carregar produtos');
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchProducts();
+    }
+  }, [router]); 
 
   const handleDelete = async (id: number) => {
     if (!confirm('Tem certeza que deseja excluir este produto?')) return;
 
     try {
+      const token = localStorage.getItem('auth_token');
       const response = await fetch(`/api/admin/products/${id}`, {
         method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       if (!response.ok) throw new Error('Erro ao excluir produto');
@@ -63,10 +77,12 @@ export default function ProductsPage() {
 
   const handleToggleStatus = async (id: number, currentStatus: boolean) => {
     try {
+      const token = localStorage.getItem('auth_token');
       const response = await fetch(`/api/admin/products/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ is_active: !currentStatus }),
       });
@@ -86,7 +102,7 @@ export default function ProductsPage() {
     }
   };
 
-  if (status === 'loading' || isLoading) {
+  if (!isAuthenticated || isLoading) {
     return (
       <AdminLayout>
         <div className="flex items-center justify-center min-h-screen">

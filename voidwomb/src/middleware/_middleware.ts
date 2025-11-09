@@ -23,7 +23,7 @@ export function middleware(req: NextRequest) {
   }
 
   const token = authHeader.split(' ')[1];
-  const secret = process.env.NEXT_PUBLIC_SUPABASE_JWT_SECRET;
+  const secret = process.env.NEXTAUTH_SECRET;
 
   if (!secret) {
     return new Response('JWT_SECRET não definido', { status: 500 });

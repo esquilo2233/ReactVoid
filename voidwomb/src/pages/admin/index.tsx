@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
+import AdminLayout from '@/components/Layout/AdminLayout';
 
 interface DashboardStats {
   totalUsers: number;
@@ -12,46 +12,60 @@ interface DashboardStats {
 }
 
 export default function AdminDashboard() {
-  const { data: session, status } = useSession();
   const router = useRouter();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/auth/login');
-      return;
-    }
+    // Verificar autenticação via localStorage
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('auth_token');
+      const isStaff = localStorage.getItem('is_staff') === 'true';
 
-    const fetchStats = async () => {
-      try {
-        const response = await fetch('/api/admin/stats');
-        if (!response.ok) throw new Error('Erro ao carregar estatísticas');
-        const data = await response.json();
-        setStats(data);
-      } catch (error) {
-        toast.error('Erro ao carregar estatísticas');
-      } finally {
-        setIsLoading(false);
+      if (!token || !isStaff) {
+        router.push('/admin/login');
+        return;
       }
-    };
 
-    fetchStats();
-  }, [status, router]);
+      setIsAuthenticated(true);
 
-  if (status === 'loading' || isLoading) {
+      const fetchStats = async () => {
+        try {
+          const response = await fetch('/api/admin/stats', {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          if (!response.ok) throw new Error('Erro ao carregar estatísticas');
+          const data = await response.json();
+          setStats(data);
+        } catch (error) {
+          toast.error('Erro ao carregar estatísticas');
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchStats();
+    }
+  }, [router]);
+
+  if (!isAuthenticated || isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
+      <AdminLayout>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      </AdminLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <AdminLayout>
+      <div>
         {/* Header */}
-        <div className="px-4 py-6 sm:px-0">
+        <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Painel Administrativo</h1>
           <p className="mt-2 text-sm text-gray-700">
             Bem-vindo, {session?.user?.email}
@@ -217,6 +231,6 @@ export default function AdminDashboard() {
           </div>
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 } 

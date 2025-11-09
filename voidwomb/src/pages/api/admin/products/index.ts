@@ -1,24 +1,39 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getSession } from 'next-auth/react';
-import prisma from '../../../../utils/prisma';
+import { prisma } from '../../../../lib/prisma';
+import jwt from 'jsonwebtoken';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const session = await getSession({ req });
-
-  if (!session) {
+  // Verificar autenticação via JWT
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ message: 'Não autorizado' });
   }
 
+  const token = authHeader.split(' ')[1];
+  const secret = process.env.NEXTAUTH_SECRET || 'supersecret';
+  
+  let decoded: any;
+  try {
+    decoded = jwt.verify(token, secret);
+  } catch (error) {
+    return res.status(401).json({ message: 'Token inválido' });
+  }
+
   // Verificar se o usuário é admin
+  if (!decoded.is_staff) {
+    return res.status(403).json({ message: 'Acesso negado' });
+  }
+
+  // Buscar usuário
   const user = await prisma.users.findUnique({
-    where: { email: session.user?.email as string },
+    where: { id: decoded.id },
   });
 
-  if (!user?.is_staff) {
-    return res.status(403).json({ message: 'Acesso negado' });
+  if (!user) {
+    return res.status(404).json({ message: 'Usuário não encontrado' });
   }
 
   switch (req.method) {

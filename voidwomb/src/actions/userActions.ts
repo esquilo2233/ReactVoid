@@ -1,22 +1,21 @@
 // src/actions/userActions.ts
-import { supabase } from '../utils/supabaseClient';
+import { prisma } from '../lib/prisma';
 import bcrypt from 'bcryptjs';
 
 export const signInUser = async (email: string, password: string) => {
     console.log('Signing in user with email:', email);
   
-    const { data, error } = await supabase
-      .from('users')
-      .select('id, email, password')
-      .eq('email', email)
-      .single();
+    const user = await prisma.users.findUnique({
+      where: { email },
+      select: { id: true, email: true, password: true }
+    });
   
-    if (error || !data) {
-      console.error('Error signing in user:', error);
+    if (!user) {
+      console.error('Error signing in user: User not found');
       throw new Error('User not found');
     }
   
-    const isPasswordValid = await bcrypt.compare(password, data.password);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
   
     if (!isPasswordValid) {
       console.error('Invalid password for user:', email);
@@ -24,16 +23,11 @@ export const signInUser = async (email: string, password: string) => {
     }
   
     // Atualizar o campo last_login
-    const { error: updateError } = await supabase
-      .from('users')
-      .update({ last_login: new Date() })
-      .eq('id', data.id);
+    await prisma.users.update({
+      where: { id: user.id },
+      data: { last_login: new Date() }
+    });
   
-    if (updateError) {
-      console.error('Error updating last login:', updateError);
-      throw new Error('Failed to update last login');
-    }
-  
-    console.log('User signed in successfully:', data);
-    return data;
+    console.log('User signed in successfully:', user);
+    return user;
   };

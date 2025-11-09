@@ -18,13 +18,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
       {/* Sidebar */}
-      <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-lg">
+      <div className="fixed inset-y-0 left-0 w-64 bg-white dark:bg-gray-800 shadow-lg">
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-center h-16 px-4 border-b">
-            <h1 className="text-xl font-bold text-gray-800">Admin Panel</h1>
+          <div className="flex items-center justify-center h-16 px-4 border-b border-gray-200 dark:border-gray-700">
+            <h1 className="text-xl font-bold text-gray-800 dark:text-white">Admin Panel</h1>
           </div>
 
           {/* Navigation */}
@@ -37,13 +37,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   href={item.href}
                   className={`flex items-center px-4 py-2 text-sm font-medium rounded-md ${
                     isActive
-                      ? 'bg-gray-100 text-gray-900'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
+                      : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
                   }`}
                 >
                   <svg
                     className={`mr-3 h-5 w-5 ${
-                      isActive ? 'text-gray-500' : 'text-gray-400'
+                      isActive ? 'text-gray-500 dark:text-gray-300' : 'text-gray-400 dark:text-gray-500'
                     }`}
                     fill="none"
                     stroke="currentColor"
@@ -63,13 +63,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </nav>
 
           {/* User Menu */}
-          <div className="p-4 border-t">
+          <div className="p-4 border-t border-gray-200 dark:border-gray-700">
             <button
               onClick={() => signOut()}
-              className="flex items-center w-full px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md"
+              className="flex items-center w-full px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md"
             >
               <svg
-                className="mr-3 h-5 w-5 text-gray-400"
+                className="mr-3 h-5 w-5 text-gray-400 dark:text-gray-500"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

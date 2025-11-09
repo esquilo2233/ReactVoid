@@ -1,3 +1,6 @@
+// Log para verificar se o arquivo está sendo carregado
+console.log('✅ /api/auth/[...nextauth].ts carregado!');
+
 import NextAuth, { AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { prisma } from '../../../lib/prisma';
@@ -42,10 +45,14 @@ const authOptions: AuthOptions = {
       },
       async authorize(credentials, req) {
         try {
+          console.log('🔐 NextAuth authorize chamado com email:', credentials?.email);
+          
           if (!credentials?.email || !credentials?.password) {
-            throw new Error('Por favor, preencha todos os campos');
+            console.log('❌ Credenciais vazias');
+            return null;
           }
 
+          console.log('🔍 Buscando usuário no banco...');
           const user = await prisma.users.findUnique({
             where: {
               email: credentials.email
@@ -53,15 +60,20 @@ const authOptions: AuthOptions = {
           });
 
           if (!user) {
-            throw new Error('Email ou senha incorretos');
+            console.log('❌ Usuário não encontrado:', credentials.email);
+            return null;
           }
 
+          console.log('🔑 Verificando senha...');
           const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
 
           if (!isPasswordValid) {
-            throw new Error('Email ou senha incorretos');
+            console.log('❌ Senha inválida');
+            return null;
           }
 
+          console.log('✅ Login válido! Criando token...');
+          
           // Criar o token JWT
           const accessToken = jwt.sign(
             { 
@@ -73,25 +85,32 @@ const authOptions: AuthOptions = {
             { expiresIn: '30d' }
           );
 
-          // Registrar log de login
-          await createLog({
-            userId: user.id,
-            email: user.email,
-            action: 'login',
-            details: 'Login bem-sucedido',
-            ipAddress: getClientIp(req as any)
-          });
+          // Registrar log de login (não bloquear se falhar)
+          try {
+            await createLog({
+              userId: user.id,
+              email: user.email,
+              action: 'login',
+              details: 'Login bem-sucedido',
+              ipAddress: getClientIp(req as any)
+            });
+          } catch (logError) {
+            console.warn('⚠️ Erro ao criar log (ignorado):', logError);
+          }
 
-          return {
+          const userData = {
             id: user.id.toString(),
             email: user.email,
             name: user.name || undefined,
             is_staff: user.is_staff,
             accessToken
           };
+
+          console.log('✅ Retornando dados do usuário:', { id: userData.id, email: userData.email, is_staff: userData.is_staff });
+          return userData;
         } catch (error) {
-          console.error('Erro na autenticação:', error);
-          throw error;
+          console.error('❌ ERRO CRÍTICO na autenticação:', error);
+          return null;
         }
       }
     })
@@ -101,20 +120,37 @@ const authOptions: AuthOptions = {
     maxAge: 30 * 24 * 60 * 60, // 30 dias
   },
   callbacks: {
-    async jwt({ token, user }: { token: any; user: any }) {
+    async jwt({ token, user, account }: { token: any; user: any; account: any }) {
+      console.log('🔄 JWT Callback chamado', { hasUser: !!user, hasToken: !!token, hasAccount: !!account });
+      
       if (user) {
+        console.log('👤 Adicionando dados do usuário ao token:', { id: user.id, email: user.email, is_staff: user.is_staff });
         token.id = user.id;
+        token.email = user.email;
         token.is_staff = user.is_staff;
         token.accessToken = user.accessToken;
       }
+      
+      console.log('✅ Token final:', { id: token.id, email: token.email, is_staff: token.is_staff });
       return token;
     },
     async session({ session, token }: { session: any; token: any }) {
-      if (session.user) {
-        session.user.id = token.id;
-        session.user.is_staff = token.is_staff;
+      console.log('📋 Session Callback chamado', { hasSession: !!session, hasToken: !!token });
+      console.log('🔑 Token no session callback:', { id: token.id, email: token.email, is_staff: token.is_staff });
+      
+      if (session.user && token) {
+        session.user.id = token.id || token.sub;
+        session.user.email = token.email || session.user.email;
+        session.user.is_staff = token.is_staff || false;
         session.user.accessToken = token.accessToken;
+        
+        console.log('✅ Session final:', { 
+          id: session.user.id, 
+          email: session.user.email, 
+          is_staff: session.user.is_staff 
+        });
       }
+      
       return session;
     }
   },
@@ -126,17 +162,17 @@ const authOptions: AuthOptions = {
           email: token.email,
           action: 'logout',
           details: 'Logout realizado',
-          ipAddress: 'IP_DESCONHECIDO' // Não temos acesso ao req no evento signOut
+          ipAddress: 'IP_DESCONHECIDO'
         });
       }
     }
   },
   pages: {
-    signIn: '/auth/login',
-    signOut: '/auth/logout',
-    error: '/auth/error',
+    signIn: '/auth/signin',
+    signOut: '/auth/signout',
+    // Não definir error aqui - vamos interceptar na rota /api/auth/error
   },
-  debug: process.env.NODE_ENV === 'development',
+  debug: false,
   secret: process.env.NEXTAUTH_SECRET,
 };
 

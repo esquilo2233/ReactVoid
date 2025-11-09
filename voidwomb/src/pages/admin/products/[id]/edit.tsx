@@ -1,13 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import { supabase } from '../../../../utils/supabaseClient';
 import ProductForm from '../../../../components/ProductForm';
 import withAuth from '../../../../components/withAuth';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 interface Product {
-  id: string;
+  id: number;
   name: string;
   sku: string;
   price: number;
@@ -25,16 +24,11 @@ const EditProductPage: React.FC = () => {
 
   const fetchProduct = useCallback(async () => {
     try {
-      const { data, error } = await supabase
-        .from('Product')
-        .select('*')
-        .eq('id', id)
-        .single();
-
-      if (error) {
-        throw error;
+      const response = await fetch(`/api/admin/products/${id}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch product');
       }
-
+      const data = await response.json();
       if (data) {
         setProduct(data);
       }
@@ -52,13 +46,17 @@ const EditProductPage: React.FC = () => {
 
   const handleUpdateProduct = async (formData: Partial<Product>) => {
     try {
-      const { error } = await supabase
-        .from('Product')
-        .update(formData)
-        .eq('id', id);
+      const response = await fetch(`/api/admin/products/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
 
-      if (error) {
-        throw error;
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to update product');
       }
 
       toast.success('Product updated successfully');
